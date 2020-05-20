@@ -8,18 +8,16 @@ Source code generation has become an integral software development tool when bui
 subsequent maintenance is often easier, less error prone, and certainly less
 repetitive compared to applying manual modifications.
 
-The library [merging_builder] provides a Dart builder that reads *several input files* and writes the merged output to *one output file*. The builder has support for specifying a header and footer to be placed at the very top and the very bottom of the output file.
+The library [merging_builder] provides a Dart builder that reads **several input files** and writes the merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the very top and the very bottom of the output file.
 
 
 ## Usage
 
-To use this library to set up a build system the following steps are required:
+To set up a build system using this library the following steps are required:
 
-1. Include [merging_builder], and [source_gen] as *dependencies* the pubspec.yaml file of the
-package **containing** the builder. In our example this package is called `sqlite_builder`.
+1. Include [merging_builder], and [source_gen] as *dependencies* of the file `pubspec.yaml` of the package **containing** the builder. In our example this package is called `sqlite_builder`.
 
-2. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are
-   typically placed in a file called: `builders.dart` located in the `lib` folder of the builder package. 
+2. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builders.dart` located in the `lib` folder of the builder package.
 
    <details> <summary> Show details. </summary>
 
@@ -40,7 +38,7 @@ package **containing** the builder. In our example this package is called `sqlit
    </details>
 
 
-3. Add the builder configuration to the file `build.yaml`, a file located in the top folder of the package **containing** the builder (along with `lib` and `pubspec.yaml`).
+3. Add the builder configuration to `build.yaml`, a file located in the top folder of the package **containing** the builder (along with `lib` and `pubspec.yaml`).
 Note, that in this example the builder is called `sqlite_init_builder`.
 
    <details> <summary> Show details. </summary>
@@ -57,7 +55,7 @@ Note, that in this example the builder is called `sqlite_init_builder`.
 
 </details>
 
-4. In the package *using* the builder add and configure the builder `sqlite_init_builder`.  The file `build.yaml` is shown below.
+4. In the package **using** the builder add `sqlite_init_builder` to the list of known builders. The file `build.yaml` is shown below.
 
    <details> <summary> Show details. </summary>
 
@@ -76,7 +74,8 @@ Note, that in this example the builder is called `sqlite_init_builder`.
 
    </details>
 
-5. Add the package *containing* the builder, in this example `sqlite_builder`, as a dev_dependency to the file `pubspec.yaml` of the package *using* the builder.
+5. Add the package **containing** the builder, in this example `sqlite_builder`, as a dev_dependency to the file `pubspec.yaml` of the package **using** the builder (called
+`sqlite_builder_example`.)
 
    <details> <summary> Show details. </summary>
 
