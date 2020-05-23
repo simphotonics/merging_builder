@@ -15,7 +15,7 @@ The library [merging_builder] provides a Dart builder that reads **several input
 
 To set up a build system using this library the following steps are required:
 
-1. Include [merging_builder], and [source_gen] as *dependencies* of the file `pubspec.yaml` of the package **containing** the builder. In our example this package is called `sqlite_builder`.
+1. Include [merging_builder], and [source_gen] as *dependencies* in the file `pubspec.yaml` of the package **containing** the builder. In our example this package is called `sqlite_builder`.
 
 2. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builders.dart` located in the `lib` folder of the builder package.
 
