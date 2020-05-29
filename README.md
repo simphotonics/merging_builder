@@ -4,20 +4,88 @@
 
 ## Introduction
 
-Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc. Setting up the build system initially takes time and effort but
-subsequent maintenance is often easier, less error prone, and certainly less
-repetitive compared to applying manual modifications.
+Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [merging_builder] provides a Dart builder that reads **several input files** and writes the merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the very top and the very bottom of the output file.
+The library [merging_builder] provides a generic Dart builder that reads **several input files** and writes the merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
 
 ## Usage
 
-To set up a build system using this library the following steps are required:
+The builder and generator classes provided by [merging_builder] are typically included in
+a package that builds libraries in other packages.
 
-1. Include [merging_builder], and [source_gen] as *dependencies* in the file `pubspec.yaml` of the package **containing** the builder. In our example this package is called `sqlite_builder`.
+To set up a build system the following steps are required:
 
-2. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builders.dart` located in the `lib` folder of the builder package.
+1. Include [merging_builder], and [source_gen] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. In our example this package is called `sqlite_builder`.
+
+2. In the package **defining** the builder, create a custom generator that extends [MergingGenerator]. Note that [MergingGenerator] is a generic class with type parameters
+`T` and `A`. `T` is arbitrary and can be a `String` or other objects that pass useful information to the function generating the merged content. The type parameter `A` represents an annotation used to annotate classes that are read during the build process.
+   <details> <summary> Show details. </summary>
+
+    ```Dart
+    import 'dart:async';
+    import 'package:analyzer/dart/element/element.dart';
+    import 'package:build/src/builder/build_step.dart';
+    import 'package:merging_builder/merging_builder.dart';
+    import 'package:quote_buffer/quote_buffer.dart';
+    import 'package:source_gen/source_gen.dart';
+    import 'package:sqlite_builder/src/readers/reader.dart';
+    import 'package:sqlite_builder/src/writers/sqlite_init_writer.dart';
+    import 'package:sqlite_entity/sqlite_entity.dart';
+
+    class SqliteInitGenerator extends MergingGenerator<String, GenerateSqliteInit> {
+      /// Returns the Sqlite command that initializes the table specified by
+      /// an object of type [TableDefinition] annotated with [GenerateSqliteInit].
+      ///
+      /// This fct is called for every class that is annotated with [GenerateSqliteInit].
+      @override
+      String generateStreamItemForAnnotatedElement(
+        Element element,
+        ConstantReader annotation,
+        BuildStep buildStep,
+      ) {
+        final sqliteInitWriter = SqliteInitWriter(
+          element: element,
+          annotation: annotation,
+          reader: reader,
+        );
+        return sqliteInitWriter.tableInitMapEntry;
+      }
+
+      /// Returns source code representing a variable of
+      /// type [Map<String, String>].
+      ///
+      /// Called once before the builder writes the merged output.
+      @override
+      FutureOr<String> mergedContent(Stream<String> stream) async {
+        final b = QuoteBuffer();
+        b.writeln('library sqlite_init;');
+        b.writeln('final init = Map<String, String>.unmodifiable({');
+        // Iterate over stream:
+        await for (var mapEntry in stream) {
+          b.writeln(mapEntry);
+        }
+        b.writeln('});');
+        return b.toString();
+      }
+
+      /// Portion of source code included at the top of the generated file.
+      /// Should be specified as header when constructing the merging builder.
+      static String get header {
+        return '/// The header';
+      }
+
+      /// Portion of source code included at the very bottom of the generated file.
+      /// Should be specified as [footer] when constructing the merging builder.
+      static String get footer {
+        return '/// This is the footer.';
+      }
+    }
+    ```
+
+   </details>
+
+3. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builders.dart` located in the `lib` folder of the builder package.
 
    <details> <summary> Show details. </summary>
 
@@ -26,7 +94,7 @@ To set up a build system using this library the following steps are required:
        import 'package:source_gen/source_gen.dart';
        import 'package:merging_builder/merging_builder.dart';
 
-      Builder sqliteInitBuilder(BuilderOptions options) => MergingBuilder(
+      Builder sqliteInitBuilder(BuilderOptions options) => MergingBuilder<String>(
           generator: SqliteInitGenerator(),
           inputFiles: 'lib/*.dart',
           outputFile: 'lib/init.dart',
@@ -38,7 +106,7 @@ To set up a build system using this library the following steps are required:
    </details>
 
 
-3. Add the builder configuration to `build.yaml`, a file located in the top folder of the package **containing** the builder (along with `lib` and `pubspec.yaml`).
+4. Add the builder configuration to `build.yaml`, a file located in the top folder of the package **defining** the builder (along with `lib` and `pubspec.yaml`).
 Note, that in this example the builder is called `sqlite_init_builder`.
 
    <details> <summary> Show details. </summary>
@@ -55,7 +123,7 @@ Note, that in this example the builder is called `sqlite_init_builder`.
 
 </details>
 
-4. In the package **using** the builder add `sqlite_init_builder` to the list of known builders. The file `build.yaml` is shown below.
+5. In the package **using** the builder add `sqlite_init_builder` to the list of known builders. The file `build.yaml` is shown below.
 
    <details> <summary> Show details. </summary>
 
@@ -74,7 +142,7 @@ Note, that in this example the builder is called `sqlite_init_builder`.
 
    </details>
 
-5. Add the package **containing** the builder, in this example `sqlite_builder`, as a dev_dependency to the file `pubspec.yaml` of the package **using** the builder (called
+6. Add the package **defining** the builder, in this example `sqlite_builder`, as a dev_dependency to the file `pubspec.yaml` of the package **using** the builder (called
 `sqlite_builder_example`.)
 
    <details> <summary> Show details. </summary>
@@ -102,7 +170,7 @@ Note, that in this example the builder is called `sqlite_init_builder`.
 
    </details>
 
-6. Initiate the build process by using the command:
+7. Initiate the build process by using the command:
    ```console
    # pub run build_runner build --delete-conflicting-outputs --verbose
    ```
