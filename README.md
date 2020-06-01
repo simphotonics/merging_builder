@@ -147,8 +147,6 @@ For more information consult the section: [Writing a Builder using a synthetic i
 
 6. In the package **using** the builder, `researcher`, add `researcher_builder` and [build_runner] as dev_dependencies in the file `pubspec.yaml`.
 
-   <details> <summary> Show details. </summary>
-
     ```Yaml
     name: researcher
       description:
@@ -162,8 +160,6 @@ For more information consult the section: [Writing a Builder using a synthetic i
         researcher_builder:
           path: ../researcher_builder
     ```
-
-   </details>
 
 7. Initiate the build process by using the command:
    ```console
