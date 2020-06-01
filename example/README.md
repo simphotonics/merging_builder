@@ -17,31 +17,20 @@ the section [usage].
 ## Features and bugs
 Please file feature requests and bugs at the [issue tracker].
 
-[builder]: https://github.com/dart-lang/build
-[researcher_builder]: https://github.com/simphotonics/merging_builder/tree/master/example/researcher_builder
-
 [add_names_builder]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
-
-[researcher]: https://github.com/simphotonics/merging_builder/tree/master/example/researcher
 
 [add_names_generator]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/generators/add_names_generator.dart
 
-[usage]: https://github.com/simphotonics/merging_builder#usage
+[builder]: https://github.com/dart-lang/build
 
 [example]: /example
 
-
 [issue tracker]: https://github.com/simphotonics/merging_builder/issues
 
-[initializeLibraryReaderForDirectory]: https://pub.dev/documentation/source_gen_test/latest/source_gen_test/initializeLibraryReaderForDirectory.html
-
-[LibraryReader]: https://pub.dev/documentation/source_gen/latest/source_gen/LibraryReader-class.html
-
-[directed_graph]: https://github.com/simphotonics/directed_graph/
-
-[source_gen]: https://pub.dev/packages/source_gen
-[source_gen_test]: https://pub.dev/packages/source_gen_test
-
-[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/lib/src/test_types/sqlite_type.dart
-
 [merging_builder]: https://pub.dev/packages/merging_builder
+
+[researcher]: https://github.com/simphotonics/merging_builder/tree/master/example/researcher
+
+[researcher_builder]: https://github.com/simphotonics/merging_builder/tree/master/example/researcher_builder
+
+[usage]: https://github.com/simphotonics/merging_builder#usage
