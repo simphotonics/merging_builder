@@ -28,7 +28,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [usage]: https://github.com/simphotonics/merging_builder#usage
 
-[example]: /
+[example]: /example
 
 
 [issue tracker]: https://github.com/simphotonics/merging_builder/issues
