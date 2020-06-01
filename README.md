@@ -17,11 +17,11 @@ The builder has support for specifying a header and footer to be placed at the t
 Following the guidelines of [source_gen], it is common practice to separate *builders* and *generators* from the code using those builders. The classes provided by [merging_builder] are typically used in
 a package that defines builders and generators.
 
-In the example below the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
+In the [example] provided with this [merging_builder], the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
 
 1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the example show here, the generator also requires the packages [analyzer] and [source_gen].)
 
-2. In the package **defining** the builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `mergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `mergedContent` merges the data and generates output that is writen to [].
+2. In the package **defining** the builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `mergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `mergedContent` merges the data and generates output that is written to [researchers.dart].
    <details> <summary> Show details. </summary>
 
     ```Dart
@@ -116,7 +116,7 @@ In the example below the package defining a new builder is called `researcher_bu
        );
     ```
 
-4. In the package defining the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for [MergingBuilder] must be specified using the notation available for synthetic input. For example, `"$lib$"` indicates that the
+4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for [MergingBuilder] must be specified using the notation available for synthetic input. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
 For more information consult the section: [Writing a Builder using a synthetic input]
 found in the documentation of the Dart package [build].
@@ -193,6 +193,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [merging_builder]: https://pub.dev/packages/merging_builder
 
+[researchers]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
 
 [source_gen]: https://pub.dev/packages/source_gen
 
