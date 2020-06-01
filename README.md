@@ -193,7 +193,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [merging_builder]: https://pub.dev/packages/merging_builder
 
-[researchers]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
+[researchers.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
 
 [source_gen]: https://pub.dev/packages/source_gen
 
