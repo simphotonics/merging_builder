@@ -14,14 +14,12 @@ The builder has support for specifying a header and footer to be placed at the t
 
 ## Usage
 
-Following the guidelines of [source_gen], it is common practice to separate builders and generators from the code using those builders.
-
-The classes provided by [merging_builder] are typically used in
+Following the guidelines of [source_gen], it is common practice to separate *builders* and *generators* from the code using those builders. The classes provided by [merging_builder] are typically used in
 a package that defines builders and generators.
 
 In the example below the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
 
-1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the example show here, the generator also requires the packages [analyzer] and [source_gen].
+1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the example show here, the generator also requires the packages [analyzer] and [source_gen].)
 
 2. In the package **defining** the builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `mergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `mergedContent` merges the data and generates output that is writen to [].
    <details> <summary> Show details. </summary>
@@ -101,8 +99,6 @@ In the example below the package defining a new builder is called `researcher_bu
 
 3. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2).
 
-   <details> <summary> Show details. </summary>
-
     ```Dart
      import 'package:build/build.dart';
      import 'package:merging_builder/merging_builder.dart';
@@ -120,14 +116,9 @@ In the example below the package defining a new builder is called `researcher_bu
        );
     ```
 
-   </details>
-
-
 4. Add the builder configuration to `build.yaml`, a file located in the top folder of the package **defining** the builder (along with `lib` and `pubspec.yaml`). The build extensions for [MergingBuilder] must be specified using the notation available for synthetic input. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
 For more information consult the section: [Writing a Builder using a synthetic input] found in the documentation of the Dart package [build].
-
-   <details> <summary> Show details. </summary>
 
     ```Yaml
     builders:
@@ -140,11 +131,7 @@ For more information consult the section: [Writing a Builder using a synthetic i
         builders:
     ```
 
-</details>
-
 5. In the package **using** the builder, `researcher`, add `add_names_builder` to the list of known builders. The file `build.yaml` is shown below.
-
-   <details> <summary> Show details. </summary>
 
     ```Yaml
      targets:
@@ -158,8 +145,6 @@ For more information consult the section: [Writing a Builder using a synthetic i
              #   - lib/*.dart
     ```
 
-   </details>
-
 6. In the package **using** the builder, `researcher`, add `researcher_builder` and [build_runner] as dev_dependencies in the file `pubspec.yaml`.
 
    <details> <summary> Show details. </summary>
@@ -171,10 +156,6 @@ For more information consult the section: [Writing a Builder using a synthetic i
 
       environment:
         sdk: '>=2.8.1 <3.0.0'
-
-      dependencies:
-        ansicolor: ^1.0.2
-        source_gen: ^0.9.5
 
       dev_dependencies:
         build_runner: ^1.10.0
@@ -198,6 +179,10 @@ For further information on how to use [MergingBuilder] see [example].
 Please file feature requests and bugs at the [issue tracker].
 
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
+
+[analyzer]: https://pub.dev/packages/analyzer
+
+[build]: https://pub.dev/packages/build
 
 [build_runner]: https://pub.dev/packages/build_runner
 
