@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      # Configure the builder `pkg_name|builder_name`
+      researcher_builder|add_names_builder:
+        # Only run this builder on the specified input.
+        enabled: true
+        # generate_for:
+        #   - lib/*.dart
