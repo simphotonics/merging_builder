@@ -116,9 +116,10 @@ In the example below the package defining a new builder is called `researcher_bu
        );
     ```
 
-4. Add the builder configuration to `build.yaml`, a file located in the top folder of the package **defining** the builder (along with `lib` and `pubspec.yaml`). The build extensions for [MergingBuilder] must be specified using the notation available for synthetic input. For example, `"$lib$"` indicates that the
+4. In the package defining the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for [MergingBuilder] must be specified using the notation available for synthetic input. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
-For more information consult the section: [Writing a Builder using a synthetic input] found in the documentation of the Dart package [build].
+For more information consult the section: [Writing a Builder using a synthetic input]
+found in the documentation of the Dart package [build].
 
     ```Yaml
     builders:
