@@ -28,8 +28,10 @@ Please file feature requests and bugs at the [issue tracker].
 
 [usage]: https://github.com/simphotonics/merging_builder#usage
 
+[example]: /
 
-[issue tracker]: https://github.com/simphotonics/directed_graph/issues
+
+[issue tracker]: https://github.com/simphotonics/merging_builder/issues
 
 [initializeLibraryReaderForDirectory]: https://pub.dev/documentation/source_gen_test/latest/source_gen_test/initializeLibraryReaderForDirectory.html
 
