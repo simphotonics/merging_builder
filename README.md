@@ -6,22 +6,20 @@
 
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [merging_builder] provides a Dart builder that reads **several input files** and writes the merged output to **one output file**. [MergingBuilder] is a parameterized class that supports passing data of arbitrary type from the generator function that is called for each annotated class to a generator
-function that creates the *merged output*.
+The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. [MergingBuilder] is a parameterized class that supports passing a data-stream of arbitrary type from the generator method that is called for each annotated class (encountered while reading the input files) to the generator method that creates the *merged output*.
 
 The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
 
 ## Usage
 
-Following the guidelines of [source_gen], it is common practice to separate *builders* and *generators* from the code using those builders. The classes provided by [merging_builder] are typically used in
-a package that defines builders and generators.
+Following the guidelines of [source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
 
-In the [example] provided with this [merging_builder], the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
+In the [example] provided, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
 
-1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the example show here, the generator also requires the packages [analyzer] and [source_gen].)
+1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the [example] mentioned here, the generator also requires the packages [analyzer] and [source_gen].)
 
-2. In the package **defining** the builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `mergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `mergedContent` merges the data and generates output that is written to [researchers.dart].
+2. In the package **defining** the custom builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `mergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `mergedContent` merges the data and generates output that is written to [researchers.dart].
    <details> <summary> Show details. </summary>
 
     ```Dart
@@ -97,7 +95,8 @@ In the [example] provided with this [merging_builder], the package defining a ne
 
    </details>
 
-3. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2).
+3. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources can
+be specified using wildecard characters supported by [Glob].
 
     ```Dart
      import 'package:build/build.dart';
@@ -116,7 +115,7 @@ In the [example] provided with this [merging_builder], the package defining a ne
        );
     ```
 
-4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for [MergingBuilder] must be specified using the notation available for synthetic input. For example, `"$lib$"` indicates that the
+4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for [MergingBuilder] must be specified using the notation available for **synthetic input**. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
 For more information consult the section: [Writing a Builder using a synthetic input]
 found in the documentation of the Dart package [build].
@@ -132,7 +131,7 @@ found in the documentation of the Dart package [build].
         builders:
     ```
 
-5. In the package **using** the builder, `researcher`, add `add_names_builder` to the list of known builders. The file `build.yaml` is shown below.
+5. In the package **using** the custom builder, `researcher`, add `add_names_builder` to the list of known builders. The file `build.yaml` is shown below.
 
     ```Yaml
      targets:
@@ -146,7 +145,7 @@ found in the documentation of the Dart package [build].
              #   - lib/*.dart
     ```
 
-6. In the package **using** the builder, `researcher`, add `researcher_builder` and [build_runner] as dev_dependencies in the file `pubspec.yaml`.
+6. In the package **using** the builder, `researcher`, add `researcher_builder` and [build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
 
     ```Yaml
     name: researcher
@@ -188,6 +187,8 @@ Please file feature requests and bugs at the [issue tracker].
 [Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
 
 [GeneratorForAnnotation]: https://pub.dev/documentation/source_gen/latest/source_gen/GeneratorForAnnotation-class.html
+
+[Glob]: https://pub.dev/packages/glob
 
 [MergingBuilder]: https://pub.dev/packages/merging_builder
 
