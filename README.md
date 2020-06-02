@@ -1,5 +1,6 @@
 
 # Merging Builder
+[![Build Status](https://travis-ci.com/simphotonics/merging_builder.svg?branch=master)](https://travis-ci.com/simphotonics/merging_builder)
 
 
 ## Introduction
