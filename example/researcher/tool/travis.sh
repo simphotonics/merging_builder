@@ -1,6 +1,6 @@
 #!/bin/bash --
 
-# Running GenericReader example.
+# Building Researcher (Merging Builder - Example).
 
 # Defining colours
 BLUE='\033[1;34m'
@@ -43,20 +43,17 @@ dartfmt -w $(find bin lib test -name \*.dart 2>/dev/null)
 echo
 echo -e "${BLUE}=== Analyzing $PWD...${RESET}"
 echo
-
 dartanalyzer \
     --fatal-warnings \
     --fatal-infos \
     --packages="$PWD/.packages" \
     $(find bin lib test -name \*.dart 2>/dev/null)
 
-
-# Running benchmark
 echo
-echo -e "${GREEN}=== Running Examples $PWD...${RESET}"
+echo -e "${CYAN}=== Building $PWD...${RESET}"
 echo
-
-dart ./bin/player_example.dart
-dart ./bin/wrapper_example.dart
-
-echo
+rm -rf .dart_tool/build/
+grep -q build_runner pubspec.yaml && \
+    pub run build_runner build \
+        --delete-conflicting-outputs \
+        --fail-on-severe
