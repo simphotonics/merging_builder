@@ -6,12 +6,12 @@ import 'package:merging_builder/src/annotations/add_names.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:quote_buffer/quote_buffer.dart';
 
-/// Reads numbers from annotated classes and emits the sum.
+/// Reads a field element of type [List<String] and generates the merged content.
 class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
   /// Portion of source code included at the top of the generated file.
   /// Should be specified as header when constructing the merging builder.
   static String get header {
-    return '/// Added names. (Specified as header.)';
+    return '/// Added names.';
   }
 
   /// Portion of source code included at the very bottom of the generated file.
@@ -40,7 +40,7 @@ class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
     return null;
   }
 
-  /// Returns merged content.
+  /// Returns the merged content.
   @override
   FutureOr<String> mergedContent(Stream<List<String>> stream) async {
     final b = QuoteBuffer();
