@@ -1,4 +1,3 @@
-
 import 'package:merging_builder/src/annotations/add_integers.dart';
 import 'package:merging_builder/src/annotations/add_names.dart';
 import 'package:merging_builder/src/annotations/add_numbers.dart';

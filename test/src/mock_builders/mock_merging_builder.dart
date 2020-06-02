@@ -2,7 +2,6 @@ import 'package:dart_style/dart_style.dart';
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-
 /// Mock builder with methods: [mergedContent] and [_combinedStream].
 /// Used for testing purposes.
 class MockMergingBuilder<T> {
@@ -32,8 +31,7 @@ class MockMergingBuilder<T> {
     buffer.writeln();
 
     // Call generator function responsible for creating merged content.
-    final source =
-        await generator.mergedContent(this._combinedStream());
+    final source = await generator.mergedContent(this._combinedStream());
     source.trim();
     buffer.writeln(source);
     buffer.writeln();
