@@ -1,8 +1,8 @@
 name: merging_builder
 
 description:
-  Generic Dart builder that reads several input
-  files and writes the merged output to one file.
+  Generic Dart builder and generator that reads several input
+  files and writes merged output to a stand-alone file.
   Has support for specifying a header and footer.
 
 
@@ -25,6 +25,7 @@ dependencies:
   quote_buffer: ^0.1.2
 
 dev_dependencies:
+  build_runner: ^1.10.0
+  build_test: ^1.2.0
   source_gen_test: ^0.1.1
   test: ^1.14.3
-  build_runner: ^1.10.0
