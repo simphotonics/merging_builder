@@ -13,7 +13,7 @@ supports passing a data-stream of arbitrary type from the generator method that 
 
 The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
-![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/directed_graph/master/images/merging_builder.svg?sanitize=true)
+![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
 
 ## Usage
