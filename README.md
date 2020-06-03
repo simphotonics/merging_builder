@@ -7,11 +7,15 @@
 
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. A conventional builder calls the method `generate` during the [MergingBuilder] is a parameterized class. The type parameter is used to
+The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
-supports passing a data-stream of arbitrary type from the generator method that is called for each annotated class (encountered while reading the input files) to the generator method that creates the *merged output*.
+A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [MergingBuilder] (indirectly) calls the generator method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generatedStreamItemForAnnotatedElement`.
 
-The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
+The private builder method `_combineStreams` combines the streams receives for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
+
+The figure below shows the flow of data between the builder and the generator. Dotted orange lines
+represent a stream of data.
+
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
@@ -20,7 +24,7 @@ The builder has support for specifying a header and footer to be placed at the t
 
 Following the guidelines of [source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
 
-In the [example] provided, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
+In the [example] provided with this library, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
 
 1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the [example] mentioned here, the generator also requires the packages [analyzer] and [source_gen].)
 
