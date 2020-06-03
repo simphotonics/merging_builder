@@ -7,9 +7,13 @@
 
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. [MergingBuilder] is a parameterized class that supports passing a data-stream of arbitrary type from the generator method that is called for each annotated class (encountered while reading the input files) to the generator method that creates the *merged output*.
+The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. A conventional builder calls the method `generate` during the [MergingBuilder] is a parameterized class. The type parameter is used to
+
+supports passing a data-stream of arbitrary type from the generator method that is called for each annotated class (encountered while reading the input files) to the generator method that creates the *merged output*.
 
 The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
+
+![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/directed_graph/master/images/merging_builder.svg?sanitize=true)
 
 
 ## Usage
@@ -191,9 +195,11 @@ Please file feature requests and bugs at the [issue tracker].
 
 [Glob]: https://pub.dev/packages/glob
 
-[MergingBuilder]: https://pub.dev/packages/merging_builder
+[MergingBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingBuilder-class.html
 
 [merging_builder]: https://pub.dev/packages/merging_builder
+
+[MergingGenerator]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingGenerator-class.html
 
 [researchers.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
 
