@@ -10,3 +10,7 @@ Renamed generator method `mergedContent` to `generateMergedContent`.
 # 0.0.3
 
 Amended docs.
+
+# 0.0.4
+
+Amended typo in README.md.
