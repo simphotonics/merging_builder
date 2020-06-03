@@ -588,7 +588,7 @@
      inkscape:cx="511.8384"
      inkscape:cy="153.67488"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g2981"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -787,7 +787,7 @@
          id="rect2359"
          width="21.000832"
          height="4"
-         x="105.10212"
+         x="106.42502"
          y="120.69155" />
       <rect
          style="opacity:1;fill:#50e149;fill-opacity:0.70512821;stroke:none;stroke-width:0.49999997;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:1.42848301;stroke-opacity:1"
@@ -833,7 +833,7 @@
          y="115.72131" />
       <rect
          y="121.01291"
-         x="66.493858"
+         x="68.081337"
          height="4"
          width="16.969362"
          id="rect2381"
@@ -954,7 +954,7 @@
            y="124.11202"
            x="35.324184"
            id="tspan1307"
-           sodipodi:role="line">_combineStream(BuildStep buildStep): Stream&lt;T&gt;</tspan></text>
+           sodipodi:role="line">_combineStreams(BuildStep buildStep): Stream&lt;T&gt;</tspan></text>
       <rect
          y="71.078705"
          x="54.585171"
@@ -1151,7 +1151,7 @@
          sodipodi:nodetypes="cccc"
          inkscape:connector-curvature="0"
          id="path2842"
-         d="m 126.35819,122.9406 h 30.14139 v -7.48702 h 4.52612"
+         d="m 127.94569,122.9406 h 28.55389 v -7.48702 h 4.52612"
          style="opacity:1;fill:none;fill-opacity:1;stroke:#f59a11;stroke-width:0.69999999;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:2.09999995, 0.69999998;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker2854);paint-order:markers fill stroke" />
     </g>
   </g>
