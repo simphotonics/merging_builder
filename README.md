@@ -9,7 +9,7 @@ Source code generation has become an integral software development tool when bui
 
 The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
-A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [MergingBuilder] (indirectly) calls the [MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generatedStreamItemForAnnotatedElement`.
+A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [MergingBuilder] (indirectly) calls the [MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generateStreamItemForAnnotatedElement`.
 
 The private builder method `_combineStreams` combines the streams receives for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
 
