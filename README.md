@@ -27,7 +27,7 @@ In the [example] provided with this library, the package defining a new builder 
 
 1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the [example] mentioned here, the generator also requires the packages [analyzer] and [source_gen].)
 
-2. In the package **defining** the custom builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `mergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `mergedContent` merges the data and generates output that is written to [researchers.dart].
+2. In the package **defining** the custom builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
    <details> <summary> Show details. </summary>
 
     ```Dart
@@ -75,7 +75,7 @@ In the [example] provided with this library, the package defining a new builder 
 
       /// Returns merged content.
       @override
-      FutureOr<String> mergedContent(Stream<List<String>> stream) async {
+      FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
         final b = QuoteBuffer();
         int i = 0;
         final List<List<String>> allNames = [];
