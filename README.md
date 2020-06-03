@@ -13,8 +13,7 @@ A conventional builder typically calls the generator method `generate` from with
 
 The private builder method `_combineStreams` combines the streams receives for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
 
-The figure below shows the flow of data between the builder and the generator. Dotted orange lines
-represent a stream of data.
+The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the orange connectors. Dotted connectors represent a stream of data.
 
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
