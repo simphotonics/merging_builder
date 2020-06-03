@@ -33,7 +33,7 @@ class AddNumbersGenerator extends MergingGenerator<num, AddNumbers> {
 
   /// Returns merged content.
   @override
-  FutureOr<String> mergedContent(Stream<num> stream) async {
+  FutureOr<String> generateMergedContent(Stream<num> stream) async {
     final b = StringBuffer();
     int i = 0;
     num sum = 0;

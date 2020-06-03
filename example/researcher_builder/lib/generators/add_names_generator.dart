@@ -42,7 +42,7 @@ class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
 
   /// Returns the merged content.
   @override
-  FutureOr<String> mergedContent(Stream<List<String>> stream) async {
+  FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
     final b = QuoteBuffer();
     int i = 0;
     final List<List<String>> allNames = [];

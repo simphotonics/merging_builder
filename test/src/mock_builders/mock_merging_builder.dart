@@ -31,7 +31,7 @@ class MockMergingBuilder<T> {
     buffer.writeln();
 
     // Call generator function responsible for creating merged content.
-    final source = await generator.mergedContent(this._combinedStream());
+    final source = await generator.generateMergedContent(this._combinedStream());
     source.trim();
     buffer.writeln(source);
     buffer.writeln();
