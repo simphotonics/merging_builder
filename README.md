@@ -9,7 +9,7 @@ Source code generation has become an integral software development tool when bui
 
 The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
-A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [MergingBuilder] (indirectly) calls the [MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generateStreamItemForAnnotatedElement`.
+A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] (indirectly) calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generateStreamItemForAnnotatedElement`.
 
 The private builder method `_combineStreams` combines the streams receives for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
 
@@ -103,7 +103,7 @@ In the [example] provided with this library, the package defining a new builder 
 
    </details>
 
-3. Create an instance of [MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources can
+3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources can
 be specified using wildecard characters supported by [Glob].
 
     ```Dart
@@ -123,7 +123,8 @@ be specified using wildecard characters supported by [Glob].
        );
     ```
 
-4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for [MergingBuilder] must be specified using the notation available for **synthetic input**. For example, `"$lib$"` indicates that the
+4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for
+[`MergingBuilder`][MergingBuilder] must be specified using the notation available for **synthetic input**. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
 For more information consult the section: [Writing a Builder using a synthetic input]
 found in the documentation of the Dart package [build].
@@ -176,7 +177,7 @@ found in the documentation of the Dart package [build].
 
 ## Examples
 
-For further information on how to use [MergingBuilder] see [example].
+For further information on how to use [`MergingBuilder`][MergingBuilder] see [example].
 
 ## Features and bugs
 

@@ -3,7 +3,7 @@
 
 ## Introduction
 
-The library [merging_builder] provides a Dart builder that reads **several input files** and writes the merged output to **one output file**.
+The package [merging_builder] provides a Dart builder that reads **several input files** and writes the merged output to **one output file**.
 
 The [example] presented in this folder contains two packages. The package [researcher_builder] depends on [merging_builder] in order to define the builder [add_names_builder] and the merging generator [add_names_generator].
 
@@ -11,7 +11,7 @@ The package [researcher] depends on [researcher_builder], specified as a *dev_de
 
 ## Build Setup
 
-Step by step instructions on how to set up and configure a [merging_builder] are provided in
+Step by step instructions on how to set up and configure a [`MergingBuilder`][MergingBuilder] are provided in
 the section [usage].
 
 
@@ -29,6 +29,8 @@ Please file feature requests and bugs at the [issue tracker].
 [issue tracker]: https://github.com/simphotonics/merging_builder/issues
 
 [merging_builder]: https://pub.dev/packages/merging_builder
+
+[MergingBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingBuilder-class.html
 
 [researcher]: https://github.com/simphotonics/merging_builder/tree/master/example/researcher
 

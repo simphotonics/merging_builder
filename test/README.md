@@ -6,7 +6,7 @@
 The library [merging_builder] provides a Dart builder that reads **several input files** and writes the merged output to **one output file**.
 
 This part of the library contains tests designed to verify
-that [MergingBuilder] and [MergingGenerator] behave as expected.
+that [`MergingBuilder`][MergingBuilder] and [`MergingGenerator`][MergingGenerator] behave as expected.
 
 The folder [src](src) contains sample input classes, generators, and a mock-merging-builder defined for testing purposes.
 

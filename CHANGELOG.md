@@ -14,3 +14,7 @@ Amended docs.
 # 0.0.4
 
 Amended typo in README.md.
+
+# 0.0.5
+
+Changed format of README.md hyperlinks.
