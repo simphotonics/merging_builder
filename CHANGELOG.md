@@ -18,3 +18,7 @@ Amended typo in README.md.
 # 0.0.5
 
 Changed format of README.md hyperlinks.
+
+# 0.0.6
+
+Updated to latest version of `directed_graph`.
