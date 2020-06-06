@@ -244,9 +244,7 @@ class MergingBuilder<T> implements Builder {
       assetGraph.addEdges(vertices[libId], edgeVertices);
     }
 
-    return assetGraph
-        .topologicalOrdering()
-        ?.reversed
+    return assetGraph.topologicalOrdering?.reversed
         ?.expand<AssetId>((item) => [item.data])
         ?.toList();
   }
