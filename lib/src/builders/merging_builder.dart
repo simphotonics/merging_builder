@@ -164,7 +164,7 @@ class MergingBuilder<T> implements Builder {
 
       // Calling generator.generateStream. An object of type [T] is
       // emitted for each class defined in library that is annotated with [A].
-      log.fine('Running ${generator.runtimeType} on: ${libAssetId.path}.');
+      log.info('Running ${generator.runtimeType} on: ${libAssetId.path}.');
       Stream<T> streamOfT = await generator.generateStream(library, buildStep);
 
       // Combining all objects of type [T] into a stream.

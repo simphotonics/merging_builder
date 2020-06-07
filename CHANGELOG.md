@@ -22,3 +22,7 @@ Changed format of README.md hyperlinks.
 # 0.0.6
 
 Updated to latest version of `directed_graph`.
+
+# 0.0.7
+
+Changed `MergingBuilder` log message type from `log.fine` to `log.info`.
