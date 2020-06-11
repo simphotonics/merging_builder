@@ -26,3 +26,7 @@ Updated to latest version of `directed_graph`.
 # 0.0.7
 
 Changed `MergingBuilder` log message type from `log.fine` to `log.info`.
+
+# 0.0.8
+
+Amended docs and hyperlinks. Changed `MergingBuilder` log message type from `log.info` to `log.fine`.

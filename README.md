@@ -7,11 +7,11 @@
 
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
+The library [`merging_builder`][merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
 
 A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] (indirectly) calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generateStreamItemForAnnotatedElement`.
 
-The private builder method `_combineStreams` combines the streams receives for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
+The private builder method `_combineStreams` combines the streams received for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
 
 The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the orange connectors. Dotted connectors represent a stream of data.
 
@@ -21,13 +21,13 @@ The figure below shows the flow of data between the builder and the generator. T
 
 ## Usage
 
-Following the guidelines of [source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
+Following the example of [`source_gen`][source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
 
 In the [example] provided with this library, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
 
-1. Include [merging_builder] and [build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the [example] mentioned here, the generator also requires the packages [analyzer] and [source_gen].)
+1. Include [`merging_builder`][merging_builder] and [`build`][build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].)
 
-2. In the package **defining** the custom builder, create a custom generator that extends [MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
+2. In the package **defining** the custom builder, create a custom generator that extends [`MergingGenerator`][MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
    <details> <summary> Show details. </summary>
 
     ```Dart
@@ -103,8 +103,7 @@ In the [example] provided with this library, the package defining a new builder 
 
    </details>
 
-3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources can
-be specified using wildecard characters supported by [Glob].
+3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources may be specified using wildecard characters supported by [`Glob`][Glob].
 
     ```Dart
      import 'package:build/build.dart';
@@ -127,7 +126,7 @@ be specified using wildecard characters supported by [Glob].
 [`MergingBuilder`][MergingBuilder] must be specified using the notation available for **synthetic input**. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
 For more information consult the section: [Writing a Builder using a synthetic input]
-found in the documentation of the Dart package [build].
+found in the documentation of the Dart package [`build`][build].
 
     ```Yaml
     builders:
