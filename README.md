@@ -153,7 +153,7 @@ found in the documentation of the Dart package [`build`][build].
              #   - lib/*.dart
     ```
 
-6. In the package **using** the builder, `researcher`, add `researcher_builder` and [build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
+6. In the package **using** the builder, `researcher`, add `researcher_builder` and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
 
     ```Yaml
     name: researcher
