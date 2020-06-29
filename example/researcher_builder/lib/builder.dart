@@ -4,11 +4,25 @@ import 'package:merging_builder/merging_builder.dart';
 import 'generators/add_names_generator.dart';
 
 /// Defines a merging builder.
-Builder addNamesBuilder(BuilderOptions options) => MergingBuilder<List<String>>(
-      generator: AddNamesGenerator(),
-      inputFiles: 'lib/input/*.dart',
-      outputFile: 'lib/researchers.dart',
-      header: AddNamesGenerator.header,
-      footer: AddNamesGenerator.footer,
-      sortAssets: false,
-    );
+/// Honours the options: `input_files`, `output_file`, `header`, `footer`,
+/// and `sort_assets` that can be set in `build.yaml`.
+Builder addNamesBuilder(BuilderOptions options) {
+  BuilderOptions defaultOptions = BuilderOptions({
+    'input_files': 'lib/*.dart',
+    'output_file': 'lib/output.dart',
+    'header': AddNamesGenerator.header,
+    'footer': AddNamesGenerator.footer,
+    'sort_assets': false,
+  });
+
+  // Apply user set options.
+  options = defaultOptions.overrideWith(options);
+  return MergingBuilder<List<String>>(
+    generator: AddNamesGenerator(),
+    inputFiles: options.config['input_files'],
+    outputFile: options.config['output_file'],
+    header: options.config['header'],
+    footer: options.config['footer'],
+    sortAssets: options.config['sort_assets'],
+  );
+}

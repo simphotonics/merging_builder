@@ -7,3 +7,9 @@ targets:
         enabled: true
         # generate_for:
         #   - lib/*.dart
+        options:
+          input_files: 'lib/input/*.dart'
+          output_file: 'lib/researchers.dart'
+          sort_assets: true
+          header: '// Header specified in build.yaml.'
+          footer: '// Footer specified in build.yaml.'

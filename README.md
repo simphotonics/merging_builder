@@ -103,7 +103,8 @@ In the [example] provided with this library, the package defining a new builder 
 
    </details>
 
-3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources may be specified using wildecard characters supported by [`Glob`][Glob].
+3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources may be specified using wildcard characters supported by [`Glob`][Glob]. The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`,
+and `sort_assets` that can be set in `build.yaml` (see step 5).
 
     ```Dart
      import 'package:build/build.dart';
@@ -111,15 +112,29 @@ In the [example] provided with this library, the package defining a new builder 
 
      import 'generators/add_names_generator.dart';
 
-     Builder addNamesBuilder(BuilderOptions options) =>
-       MergingBuilder<List<String>>(
+     /// Defines a merging builder.
+     /// Honours the options: `input_files`, `output_file`, `header`, `footer`,
+     /// and `sort_assets` that can be set in `build.yaml`.
+     Builder addNamesBuilder(BuilderOptions options) {
+       BuilderOptions defaultOptions = BuilderOptions({
+         'input_files': 'lib/*.dart',
+         'output_file': 'lib/output.dart',
+         'header': AddNamesGenerator.header,
+         'footer': AddNamesGenerator.footer,
+         'sort_assets': false,
+       });
+
+       // Apply user set options.
+       options = defaultOptions.overrideWith(options);
+       return MergingBuilder<List<String>>(
          generator: AddNamesGenerator(),
-         inputFiles: 'lib/input/*.dart',
-         outputFile: 'lib/researchers.dart',
-         header: AddNamesGenerator.header,
-         footer: AddNamesGenerator.footer,
-         sortAssets: false,
+         inputFiles: options.config['input_files'],
+         outputFile: options.config['output_file'],
+         header: options.config['header'],
+         footer: options.config['footer'],
+         sortAssets: options.config['sort_assets'],
        );
+     }
     ```
 
 4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for
@@ -151,6 +166,12 @@ found in the documentation of the Dart package [`build`][build].
              # Only run this builder on the specified input.
              # generate_for:
              #   - lib/*.dart
+             options:
+              input_files: 'lib/input/*.dart'
+              output_file: 'lib/researchers.dart'
+              sort_assets: true
+              header: '// Header specified in build.yaml.'
+              footer: '// Footer specified in build.yaml.'
     ```
 
 6. In the package **using** the builder, `researcher`, add `researcher_builder` and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
