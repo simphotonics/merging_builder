@@ -5,3 +5,9 @@ builders:
     build_extensions: {"$lib$": ["*.dart"]}
     auto_apply: root_package
     build_to: source
+  assistant_builder:
+    import: "package:researcher_builder/builder.dart"
+    builder_factories: ["assistantBuilder"]
+    build_extensions: {"$lib$": ["*.dart"]}
+    auto_apply: root_package
+    build_to: source

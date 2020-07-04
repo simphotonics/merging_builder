@@ -1,5 +1,6 @@
 import 'package:build/build.dart';
 import 'package:merging_builder/merging_builder.dart';
+import 'package:researcher_builder/generators/assistant_generator.dart';
 
 import 'generators/add_names_generator.dart';
 
@@ -17,12 +18,21 @@ Builder addNamesBuilder(BuilderOptions options) {
 
   // Apply user set options.
   options = defaultOptions.overrideWith(options);
-  return MergingBuilder<List<String>>(
+  return MergingBuilder<List<String>, Lib>(
     generator: AddNamesGenerator(),
     inputFiles: options.config['input_files'],
     outputFile: options.config['output_file'],
     header: options.config['header'],
     footer: options.config['footer'],
     sortAssets: options.config['sort_assets'],
+  );
+}
+
+/// Defines a standalone builder.
+Builder assistantBuilder(BuilderOptions options) {
+  return StandaloneBuilder<Package>(
+    generator: AssistantGenerator(),
+    inputFiles: 'lib/input/*.dart',
+    outputFiles: 'lib/input/(*).dart'
   );
 }
