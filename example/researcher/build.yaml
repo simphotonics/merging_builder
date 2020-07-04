@@ -13,3 +13,5 @@ targets:
           sort_assets: true
           header: '// Header specified in build.yaml.'
           footer: '// Footer specified in build.yaml.'
+      researcher_builder|assistant_builder:
+        enabled: true
