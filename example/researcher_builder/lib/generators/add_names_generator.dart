@@ -30,12 +30,10 @@ class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
     if (element is ClassElement) {
       final nameObjects =
           element.getField('names')?.computeConstantValue()?.toListValue();
-      if (nameObjects != null) {
-        for (final nameObj in nameObjects) {
-          result.add(nameObj.toStringValue());
-        }
-        return result;
+      for (final nameObj in nameObjects ?? []) {
+        result.add(nameObj.toStringValue());
       }
+      return result;
     }
     return null;
   }
