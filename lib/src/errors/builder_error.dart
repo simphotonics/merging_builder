@@ -1,3 +1,5 @@
+import 'package:ansicolor/ansicolor.dart';
+
 /// Error thrown when a generator encounters an unexpected state.
 class BuilderError extends Error {
   BuilderError({
@@ -25,11 +27,20 @@ class BuilderError extends Error {
         ? ''
         : ' Found: ' + Error.safeToString(invalidState);
 
-    return 'GeneratorError: ' +
+    const String RED = '\u001b[31m';
+    const String YELLOW = '\u001b[33m';
+    const String RESET = '\u001b[0m';
+
+    return '${RED}[BuilderError]: $RESET' +
         Error.safeToString(message) +
-        found +
-        expected +
         '\n' +
+        '        ' +
+        found +
+        '\n' +
+        '     ' +
+        expected +
+        '\n\n' +
+        '${YELLOW}[StackTrace]: $RESET\n' +
         super.stackTrace.toString();
   }
 }
