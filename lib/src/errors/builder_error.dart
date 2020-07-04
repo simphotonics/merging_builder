@@ -1,5 +1,3 @@
-import 'package:ansicolor/ansicolor.dart';
-
 /// Error thrown when a generator encounters an unexpected state.
 class BuilderError extends Error {
   BuilderError({
