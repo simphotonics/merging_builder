@@ -9,13 +9,9 @@ import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart' show LibraryReader;
 
-/// Singature of a function that can be provided to the [MergingBuider]
-/// constructor in the form of the parameter [formatOutput].
-/// The function is used to format the output before it is
-/// written to a stand-alone file.
-typedef String Formatter(String input);
+import 'formatter.dart';
 
-/// Builder that merges its output into one library file.
+/// Builder that merges its output into one file.
 /// Input files must be specified using [Glob] syntax.
 ///
 /// The builder constructor requires a generator extending [MergingGenerator<T, A>].
@@ -23,9 +19,9 @@ typedef String Formatter(String input);
 /// The builder calls the generator method [Stream<T> generateStream(library, buildStep)]
 /// which emits an object of type [T] for each (input) element annotated with [A].
 ///
-/// The merged output is returned to the builder by the generator method
+/// The merged output is returned to the builder via the generator method
 /// [FutureOr<String> mergedOutput(Stream<T> stream)].
-class MergingBuilder<T> implements Builder {
+class MergingBuilder<T, S extends SyntheticInput> implements Builder {
   /// Constructs a [MergingBuilder] object.
   ///
   /// The parameter [generator] is required.
@@ -40,7 +36,8 @@ class MergingBuilder<T> implements Builder {
     this.header = '',
     this.footer = '',
     this.sortAssets = false,
-  }) : this.formatOutput = DartFormatter().format;
+  })  : this.formatOutput = DartFormatter().format,
+        this.syntheticInput = SyntheticInput.instance<S>();
 
   /// Input files. Specify the complete path relative to the
   /// root directory.
@@ -83,6 +80,9 @@ class MergingBuilder<T> implements Builder {
   /// file B depends on A, even indirectly).
   final bool sortAssets;
 
+  /// The synthetic input used by this builder.
+  final S syntheticInput;
+
   /// Returns the output file name.
   String get outputFileName => path.basename(outputFile);
 
@@ -95,10 +95,40 @@ class MergingBuilder<T> implements Builder {
   /// Returns the input file directory.
   String get inputDirectory => path.dirname(inputFiles);
 
+  /// Validates input and output path.
+  void validate(String path) {
+    if (S == Lib && inputFiles.substring(0, 'lib'.length) != 'lib') {
+      throw BuilderError(
+          message: 'Invalid input file path found.',
+          expectedState:
+              'Type parameter: [Lib] => A path starting with \'lib\'.'
+              'Alternatively, change the type parameter to [Package].',
+          invalidState: 'The actual input path is: $inputFiles.');
+    }
+    if (S == Lib && outputFile.substring(0, 'lib'.length) != 'lib') {
+      throw BuilderError(
+          message: 'Invalid output file path found.',
+          expectedState:
+              'Type parameter: [Lib] => A path starting with \'lib\'.'
+              'Alternatively, change the type parameter to [Package].',
+          invalidState: 'The actual output path is: $outputFile.');
+    }
+  }
+
   @override
-  Map<String, List<String>> get buildExtensions => {
-        r'$lib$': [this.outputFileName]
-      };
+  Map<String, List<String>> get buildExtensions {
+    if (syntheticInput == null) {
+      throw BuilderError(
+          message: 'Generic type parameter missing.',
+          expectedState:
+              'MergingBuilder<...,Lib> or MergingBuilder<..., Package>.',
+          invalidState: 'MergingBuilder defined without type parameter [U].');
+    }
+    validate(outputFile);
+    return {
+      syntheticInput.value: [outputFile]
+    };
+  }
 
   /// Writes the merged content to the stand-alone file
   /// specified by [outputFile].
