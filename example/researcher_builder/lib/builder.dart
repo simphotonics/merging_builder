@@ -30,9 +30,9 @@ Builder addNamesBuilder(BuilderOptions options) {
 
 /// Defines a standalone builder.
 Builder assistantBuilder(BuilderOptions options) {
-  return StandaloneBuilder<Package>(
+  return StandaloneBuilder<Lib>(
     generator: AssistantGenerator(),
     inputFiles: 'lib/input/*.dart',
-    outputFiles: 'lib/input/(*).dart'
+    outputFiles: 'lib/output/assistant_(*).dart'
   );
 }
