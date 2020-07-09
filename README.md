@@ -231,7 +231,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [build_runner]: https://pub.dev/packages/build_runner
 
-[builder]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
+[builder.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
 
 [example]: example
 
