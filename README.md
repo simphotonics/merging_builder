@@ -241,11 +241,15 @@ Please file feature requests and bugs at the [issue tracker].
 
 [Glob]: https://pub.dev/packages/glob
 
+[$Lib$]: https://pub.dev/documentation/merging_builder/latest/merging_builder/$Lib$-class.html
+
 [MergingBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingBuilder-class.html
 
 [merging_builder]: https://pub.dev/packages/merging_builder
 
 [MergingGenerator]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingGenerator-class.html
+
+[$Package$]: https://pub.dev/documentation/merging_builder/latest/merging_builder/$Package$-class.html
 
 [researchers.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
 
