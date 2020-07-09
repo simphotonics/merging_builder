@@ -18,6 +18,8 @@ about *synthetic input* see:
 ### Merging Builder
 
 [MergingBuilder] reads **several input files** and writes merged output to **one output file**.
+The builder provides the option to sort the input files in reverse topological order. If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
+generating code that needs to list variables or call functions in order of dependence. To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
 
 A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
 
@@ -30,7 +32,7 @@ The figure below shows the flow of data between the builder and the generator. T
 
 ### Standalone Builder
 
-[StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
+[`StandaloneBuilder`] reads one or several input files and writes standalone files to a custom location.
 *Standalone* means the output files may be written to a custom folder and not only the extension but the
 name of the output file can be configured.
 
@@ -40,7 +42,7 @@ wild-card notation supported by [`Glob`][Glob].
 Output files are specified by using the custom symbol
 `(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the files [`example\researcher_builder\builder.dart`][builder.dart].
 
-## Usage
+Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command (see point 7 in the next section) from the root directory of the package the build is applied to.
 
 Following the example of [`source_gen`][source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
 
