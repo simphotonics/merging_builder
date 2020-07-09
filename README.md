@@ -7,17 +7,38 @@
 
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [`merging_builder`][merging_builder] provides a Dart builder that reads **several input files** and writes merged output to **one output file**. The builder has support for specifying a header and footer to be placed at the top and bottom of the output file.
+The library [`merging_builder`][merging_builder] includes the classes
+[`MergingBuilder`][] and [`StandaloneBuilder`][]. Both builders use *synthetic input* which must be specified
+by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package] as type parameter `S` (see figure below).
 
-A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] (indirectly) calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data of type `T` to the builder, one stream item for each annotated element passed to the generator method `generateStreamItemForAnnotatedElement`.
+[`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
+about *synthetic input* see:
+[Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
 
-The private builder method `_combineStreams` combines the streams received for each processed file asset and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
+### Merging Builder
 
-The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the orange connectors. Dotted connectors represent a stream of data.
+[MergingBuilder] reads **several input files** and writes merged output to **one output file**.
+
+A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
+
+The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
+
+The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
 
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
+### Standalone Builder
+
+[StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
+*Standalone* means the output files may be written to a custom folder and not only the extension but the
+name of the output file can be configured.
+
+The input file path (constructor parameter `inputFiles`) may include
+wild-card notation supported by [`Glob`][Glob].
+
+Output files are specified by using the custom symbol
+`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the files [`example\researcher_builder\builder.dart`][builder.dart].
 
 ## Usage
 
@@ -104,7 +125,7 @@ In the [example] provided with this library, the package defining a new builder 
    </details>
 
 3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources may be specified using wildcard characters supported by [`Glob`][Glob]. The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`,
-and `sort_assets` that can be set in `build.yaml` (see step 5).
+and `sort_assets` that can be set in the file `build.yaml` located in the package `researcher` (see step 5).
 
     ```Dart
      import 'package:build/build.dart';
@@ -148,10 +169,9 @@ found in the documentation of the Dart package [`build`][build].
       add_names_builder:
         import: "package:researcher_builder/builder.dart"
         builder_factories: ["addNamesBuilder"]
-        build_extensions: {"$lib$": ["*.dart"]}
+        build_extensions: {"lib/$lib$": ["lib/researchers.dart"]}
         auto_apply: root_package
         build_to: source
-        builders:
     ```
 
 5. In the package **using** the custom builder, `researcher`, add `add_names_builder` to the list of known builders. The file `build.yaml` is shown below.
@@ -210,6 +230,8 @@ Please file feature requests and bugs at the [issue tracker].
 [build]: https://pub.dev/packages/build
 
 [build_runner]: https://pub.dev/packages/build_runner
+
+[builder]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
 
 [example]: example
 
