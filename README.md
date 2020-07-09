@@ -32,7 +32,7 @@ The figure below shows the flow of data between the builder and the generator. T
 
 ### Standalone Builder
 
-[`StandaloneBuilder`] reads one or several input files and writes standalone files to a custom location.
+[`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
 *Standalone* means the output files may be written to a custom folder and not only the extension but the
 name of the output file can be configured.
 
@@ -40,7 +40,7 @@ The input file path (constructor parameter `inputFiles`) may include
 wild-card notation supported by [`Glob`][Glob].
 
 Output files are specified by using the custom symbol
-`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the files [`example\researcher_builder\builder.dart`][builder.dart].
+`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
 
 Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command (see point 7 in the next section) from the root directory of the package the build is applied to.
 
@@ -136,8 +136,9 @@ and `sort_assets` that can be set in the file `build.yaml` located in the packag
      import 'generators/add_names_generator.dart';
 
      /// Defines a merging builder.
-     /// Honours the options: `input_files`, `output_file`, `header`, `footer`,
-     /// and `sort_assets` that can be set in `build.yaml`.
+     /// Honours the options: `input_files`, `output_file`,
+     ///  `header`, `footer`, and `sort_assets`
+     ///  that can be set in `build.yaml`.
      Builder addNamesBuilder(BuilderOptions options) {
        BuilderOptions defaultOptions = BuilderOptions({
          'input_files': 'lib/*.dart',
@@ -158,6 +159,23 @@ and `sort_assets` that can be set in the file `build.yaml` located in the packag
          sortAssets: options.config['sort_assets'],
        );
      }
+     
+     /// Defines a `StandaloneBuilder`.
+     Builder assistantBuilder(BuilderOptions options) {
+       BuilderOptions defaultOptions = BuilderOptions({
+         'input_files': 'lib/*.dart',
+         'output_files': 'lib/output/assistant_(*).dart',
+         'header': AssistantGenerator.header,
+         'footer': AssistantGenerator.footer,
+         'root': ''
+       });
+       options = defaultOptions.overrideWith(options);
+       return StandaloneBuilder<$Lib$>(
+           generator: AssistantGenerator(),
+           inputFiles: options.config['input_files'],
+           outputFiles: options.config['output_files'],
+           root: options.config['root']);
+     }
     ```
 
 4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for
@@ -171,7 +189,13 @@ found in the documentation of the Dart package [`build`][build].
       add_names_builder:
         import: "package:researcher_builder/builder.dart"
         builder_factories: ["addNamesBuilder"]
-        build_extensions: {"lib/$lib$": ["lib/researchers.dart"]}
+        build_extensions: {"lib/$lib$": ["lib/output.dart"]}
+        auto_apply: root_package
+        build_to: source
+      assistant_builder:
+        import: "package:researcher_builder/builder.dart"
+        builder_factories: ["assistantBuilder"]
+        build_extensions: {"lib/$lib$": ["*.dart"]}
         auto_apply: root_package
         build_to: source
     ```
@@ -184,16 +208,22 @@ found in the documentation of the Dart package [`build`][build].
          builders:
            # Configure the builder `pkg_name|builder_name`
            researcher_builder|add_names_builder:
-             enabled: true
              # Only run this builder on the specified input.
+             enabled: true
              # generate_for:
              #   - lib/*.dart
              options:
-              input_files: 'lib/input/*.dart'
-              output_file: 'lib/researchers.dart'
-              sort_assets: true
-              header: '// Header specified in build.yaml.'
-              footer: '// Footer specified in build.yaml.'
+               input_files: 'lib/input/*.dart'
+               output_file: 'lib/output/researchers.dart'
+               sort_assets: false
+               header: '// Header specified in build.yaml.'
+               footer: '// Footer specified in build.yaml.'
+           researcher_builder|assistant_builder:
+             enabled: true
+             options:
+               input_files: 'lib/input/*.dart'
+               output_files: 'lib/output/assistant_(*).dart'
+               root: ''
     ```
 
 6. In the package **using** the builder, `researcher`, add `researcher_builder` and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
