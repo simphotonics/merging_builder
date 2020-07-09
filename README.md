@@ -9,7 +9,7 @@ Source code generation has become an integral software development tool when bui
 
 The library [`merging_builder`][merging_builder] includes the classes
 [`MergingBuilder`][MergingBuilder] and [`StandaloneBuilder`][StandaloneBuilder]. Both builders use *synthetic input* which must be specified
-by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package] as type parameter `S` (see figure below).
+by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type parameter `S` (see figure below).
 
 [`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
 about *synthetic input* see:
