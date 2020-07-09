@@ -8,7 +8,7 @@
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
 The library [`merging_builder`][merging_builder] includes the classes
-[`MergingBuilder`][] and [`StandaloneBuilder`][]. Both builders use *synthetic input* which must be specified
+[`MergingBuilder`][MergingBuilder] and [`StandaloneBuilder`][StandaloneBuilder]. Both builders use *synthetic input* which must be specified
 by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package] as type parameter `S` (see figure below).
 
 [`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
@@ -252,5 +252,7 @@ Please file feature requests and bugs at the [issue tracker].
 [source_gen]: https://pub.dev/packages/source_gen
 
 [source_gen_test]: https://pub.dev/packages/source_gen_test
+
+[StandaloneBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/StandaloneBuilder-class.html
 
 [Writing a Builder using a synthetic input]: https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input
