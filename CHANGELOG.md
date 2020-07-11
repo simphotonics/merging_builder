@@ -1,3 +1,7 @@
+# 1.0.0
+
+Added classes `SyntheticBuilder` and `StandaloneBuilder`.
+
 # 0.0.9
 
 Extended example `researcher_builder`. The builder `addNamesBuilder` now handles `BuilderOptions` specified in the `build.yaml` file of the package consuming the config settings, `researcher`.
