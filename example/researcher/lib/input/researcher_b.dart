@@ -1,6 +1,6 @@
-import 'package:merging_builder/src/annotations/add_integers.dart';
-import 'package:merging_builder/src/annotations/add_names.dart';
-import 'package:merging_builder/src/annotations/add_numbers.dart';
+library researcher_b;
+
+import 'package:researcher/researcher.dart';
 
 /// Const class for testing purposes.
 @AddNumbers()
