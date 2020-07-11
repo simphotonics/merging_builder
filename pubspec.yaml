@@ -5,7 +5,7 @@ description:
   files and writes merged output to a stand-alone file.
   The builder uses synthetic input.
 
-version: 0.1.1
+version: 0.1.2
 
 homepage: https://github.com/simphotonics/merging_builder
 
