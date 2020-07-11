@@ -57,3 +57,9 @@ grep -q build_runner pubspec.yaml && \
     pub run build_runner build \
         --delete-conflicting-outputs \
         --fail-on-severe
+
+# Running tests
+echo
+echo -e "${CYAN}=== Testing $PWD...${RESET}"
+echo
+pub run test -r expanded
