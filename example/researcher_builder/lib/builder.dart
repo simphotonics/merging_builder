@@ -1,8 +1,8 @@
 import 'package:build/build.dart';
 import 'package:merging_builder/merging_builder.dart';
-import 'package:researcher_builder/generators/assistant_generator.dart';
 
-import 'generators/add_names_generator.dart';
+import 'src/generators/add_names_generator.dart';
+import 'src/generators/assistant_generator.dart';
 
 /// Defines a merging builder.
 /// Honours the options: `input_files`, `output_file`, `header`, `footer`,
@@ -13,12 +13,12 @@ Builder addNamesBuilder(BuilderOptions options) {
     'output_file': 'lib/output.dart',
     'header': AddNamesGenerator.header,
     'footer': AddNamesGenerator.footer,
-    'sort_assets': false,
+    'sort_assets': true,
   });
 
   // Apply user set options.
   options = defaultOptions.overrideWith(options);
-  return MergingBuilder<List<String>, Lib>(
+  return MergingBuilder<List<String>, $Lib$>(
     generator: AddNamesGenerator(),
     inputFiles: options.config['input_files'],
     outputFile: options.config['output_file'],
@@ -30,9 +30,17 @@ Builder addNamesBuilder(BuilderOptions options) {
 
 /// Defines a standalone builder.
 Builder assistantBuilder(BuilderOptions options) {
-  return StandaloneBuilder<Lib>(
-    generator: AssistantGenerator(),
-    inputFiles: 'lib/input/*.dart',
-    outputFiles: 'lib/output/assistant_(*).dart'
-  );
+  BuilderOptions defaultOptions = BuilderOptions({
+    'input_files': 'lib/*.dart',
+    'output_files': 'lib/output/assistant_(*).dart',
+    'header': AssistantGenerator.header,
+    'footer': AssistantGenerator.footer,
+    'root': ''
+  });
+  options = defaultOptions.overrideWith(options);
+  return StandaloneBuilder<$Lib$>(
+      generator: AssistantGenerator(),
+      inputFiles: options.config['input_files'],
+      outputFiles: options.config['output_files'],
+      root: options.config['root']);
 }
