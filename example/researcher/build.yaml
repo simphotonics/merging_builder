@@ -9,9 +9,13 @@ targets:
         #   - lib/*.dart
         options:
           input_files: 'lib/input/*.dart'
-          output_file: 'lib/researchers.dart'
-          sort_assets: true
+          output_file: 'lib/output/researchers.dart'
+          sort_assets: false
           header: '// Header specified in build.yaml.'
           footer: '// Footer specified in build.yaml.'
       researcher_builder|assistant_builder:
         enabled: true
+        options:
+          input_files: 'lib/input/*.dart'
+          output_files: 'lib/output/assistant_(*).dart'
+          root: ''
