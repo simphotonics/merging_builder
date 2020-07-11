@@ -15,7 +15,7 @@ by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type paramete
 about *synthetic input* see:
 [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
 
-### Merging Builder
+### Class Merging Builder
 
 [MergingBuilder] reads **several input files** and writes merged output to **one output file**.
 The builder provides the option to sort the input files in reverse topological order. If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
@@ -30,7 +30,7 @@ The figure below shows the flow of data between the builder and the generator. T
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
-### Standalone Builder
+### Class Standalone Builder
 
 [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
 *Standalone* means the output files may be written to a custom folder and not only the extension but the
