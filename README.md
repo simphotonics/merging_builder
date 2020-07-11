@@ -8,7 +8,7 @@
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
 The library [`merging_builder`][merging_builder] includes the classes
-[`MergingBuilder`][MergingBuilder] and [`StandaloneBuilder`][StandaloneBuilder]. Both builders use *synthetic input* which must be specified
+[`MergingBuilder`][class-merging-builder] and [`StandaloneBuilder`][class-standalone-builder]. Both builders use *synthetic input* which must be specified
 by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type parameter `S` (see figure below).
 
 [`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
@@ -268,6 +268,10 @@ Please file feature requests and bugs at the [issue tracker].
 [build_runner]: https://pub.dev/packages/build_runner
 
 [builder.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
+
+[class-merging-builder]: https://github.com/simphotonics/merging_builder#class-merging-builder
+
+[class-standalone-builder]: https://github.com/simphotonics/merging_builder#class-standalone-builder
 
 [example]: example
 
