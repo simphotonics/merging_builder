@@ -1,4 +1,8 @@
-# 1.0.0
+# 0.1.1
+
+Amended docs.
+
+# 0.1.0
 
 Added classes `SyntheticBuilder` and `StandaloneBuilder`.
 

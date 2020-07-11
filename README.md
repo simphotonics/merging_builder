@@ -44,6 +44,9 @@ Output files are specified by using the custom symbol
 
 Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command (see point 7 in the next section) from the root directory of the package the build is applied to.
 
+
+## Usage
+
 Following the example of [`source_gen`][source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
 
 In the [example] provided with this library, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
@@ -226,7 +229,8 @@ found in the documentation of the Dart package [`build`][build].
                root: ''
     ```
 
-6. In the package **using** the builder, `researcher`, add `researcher_builder` and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
+6. In the package **using** the builder, `researcher`, add `researcher_builder`
+and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
 
     ```Yaml
     name: researcher

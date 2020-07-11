@@ -1,12 +1,11 @@
 name: merging_builder
 
 description:
-  Generic Dart builder and generator that reads several input
+  Generic builder that reads several input
   files and writes merged output to a stand-alone file.
-  Has support for specifying a header and footer.
+  The builder uses synthetic input.
 
-
-version: 0.1.0
+version: 0.1.1
 
 homepage: https://github.com/simphotonics/merging_builder
 
