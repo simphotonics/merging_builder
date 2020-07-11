@@ -159,7 +159,7 @@ and `sort_assets` that can be set in the file `build.yaml` located in the packag
          sortAssets: options.config['sort_assets'],
        );
      }
-     
+
      /// Defines a `StandaloneBuilder`.
      Builder assistantBuilder(BuilderOptions options) {
        BuilderOptions defaultOptions = BuilderOptions({
@@ -255,7 +255,7 @@ For further information on how to use [`MergingBuilder`][MergingBuilder] see [ex
 
 Please file feature requests and bugs at the [issue tracker].
 
-[issue tracker]: https://github.com/simphotonics/generic_reader/issues
+[issue tracker]: https://github.com/simphotonics/merging_builder/issues
 
 [analyzer]: https://pub.dev/packages/analyzer
 
