@@ -155,7 +155,6 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
       }
       assetGraph.addEdges(vertex, connectedVertices);
     }
-    print(assetGraph);
 
     final List<Vertex<AssetId>> topologicalOrdering =
         assetGraph.topologicalOrdering;
