@@ -1,9 +1,9 @@
 import 'package:build/src/builder/build_step.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:exception_templates/exception_templates.dart';
 import 'dart:async';
 
 import 'package:merging_builder/merging_builder.dart';
-import 'package:merging_builder/src/errors/builder_error.dart';
 import 'package:source_gen/src/constants/reader.dart';
 import 'package:test/test.dart';
 
@@ -65,7 +65,7 @@ void main() {
       try {
         buildExtensions = misconfiguredlibBuilder.buildExtensions;
       } catch (e) {
-        expect(e, isA<BuilderError>());
+        expect(e, isA<ErrorOf<SyntheticInput>>());
       }
       if (buildExtensions != null) {
         // Mock code to avoid lint: 'Unused local variable.

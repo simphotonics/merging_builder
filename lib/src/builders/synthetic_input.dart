@@ -1,6 +1,5 @@
+import 'package:exception_templates/exception_templates.dart';
 import 'package:meta/meta.dart';
-
-import '../errors/builder_error.dart';
 
 /// Base class representing synthetic builder input.
 /// For more information about synthetic input see:
@@ -18,9 +17,7 @@ abstract class SyntheticInput {
   String toString() => value;
 
   /// Returns an instance of [$Lib$] or [$Package$].
-  ///
-  /// Note: Returns [null] is T does not extend [Synthetic].
-  static SyntheticInput instance<T extends SyntheticInput>() {
+  static T instance<T extends SyntheticInput>() {
     return (T == $Lib$) ? $Lib$() : $Package$();
   }
 
@@ -42,7 +39,7 @@ abstract class SyntheticInput {
   /// (type parameter is [$Lib$]) and the path does not start with `lib`.
   static void validatePath<T extends SyntheticInput>(String path) {
     if (!SyntheticInput.isValidPath<T>(path)) {
-      throw BuilderError(
+      throw ErrorOf<SyntheticInput>(
           message: 'Invalid file path found.',
           expectedState: 'A path starting with \'lib\'.'
               'To access files outside \'lib\' change the builder type parameter to [Package].',

@@ -19,7 +19,7 @@ void main() {
     outputFiles: 'lib/output/assistant_(*).dart',
   );
 
-  final Map<String, String> outputs = {
+  final outputs = <String, String>{
     '$pkgName|lib/output/assistant_researcher_a.dart':
         assistant_researcher_a_dot_dart,
     '$pkgName|lib/output/assistant_researcher_b.dart':

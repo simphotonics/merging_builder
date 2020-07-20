@@ -12,7 +12,7 @@ class MockMergingBuilder<T> {
     this.footer,
     this.libraries,
     Formatter formatOutput,
-  }) : this._formatOutput = formatOutput ?? DartFormatter().format;
+  }) : _formatOutput = formatOutput ?? DartFormatter().format;
 
   final MergingGenerator<T, dynamic> generator;
   final String header;
@@ -32,14 +32,13 @@ class MockMergingBuilder<T> {
     buffer.writeln();
 
     // Call generator function responsible for creating merged content.
-    final source =
-        await generator.generateMergedContent(this._combineStreams());
+    final source = await generator.generateMergedContent(_combineStreams());
     source.trim();
     buffer.writeln(source);
     buffer.writeln();
 
     // Add footer.
-    if (this.footer != null) buffer.writeln(this.footer);
+    if (footer != null) buffer.writeln(footer);
 
     // Format output.
     return _formatOutput(buffer.toString());
@@ -50,7 +49,7 @@ class MockMergingBuilder<T> {
   /// by iterating over each file asset.
   Stream<T> _combineStreams() async* {
     for (final library in libraries) {
-      Stream<T> streamOfT = await generator.generateStream(library, null);
+      final streamOfT = await generator.generateStream(library, null);
       // Combining all objects of type [T] into a stream.
       await for (final T t in streamOfT) {
         yield t;

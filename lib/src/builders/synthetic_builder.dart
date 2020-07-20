@@ -1,11 +1,10 @@
 import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:directed_graph/directed_graph.dart';
+import 'package:exception_templates/exception_templates.dart';
 import 'package:glob/glob.dart';
 import 'package:meta/meta.dart';
-import 'package:path/path.dart' as path;
 
-import '../errors/builder_error.dart';
 import 'formatter.dart';
 import 'synthetic_input.dart';
 
@@ -21,7 +20,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
     this.footer,
     Formatter formatOutput,
   })  : formatter = formatOutput ?? DartFormatter().format,
-        this.syntheticInput = SyntheticInput.instance<S>();
+        syntheticInput = SyntheticInput.instance<S>();
 
   /// Input files. Specify the complete path relative to the
   /// root directory.
@@ -49,18 +48,6 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   /// The synthetic input used by this builder.
   final S syntheticInput;
 
-  /// Returns the output path.
-  String get outputPath;
-
-  /// Returns the output directory name.
-  String get outputDirectory;
-
-  /// Returns the input file name(s).
-  String get inputFileNames => path.basename(inputFiles);
-
-  /// Returns the input file directory.
-  String get inputDirectory => path.dirname(inputFiles);
-
   /// Returns the generated source code
   /// after adding the header and footer.
   ///
@@ -79,25 +66,20 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
     buffer.writeln();
 
     // Add footer.
-    buffer.writeln(this.footer);
+    buffer.writeln(footer);
 
     // Format output.
-    return this.formatter(buffer.toString());
+    return formatter(buffer.toString());
   }
 
   /// Returns a list of unordered library asset ids.
   /// All non-library inputs (e.g. part files) are skipped.
   Future<List<AssetId>> libraryAssetIds(BuildStep buildStep) async {
-    final List<AssetId> result = [];
-    // Find matching input files.
-    final Stream<AssetId> inputs = await buildStep.findAssets(
-      Glob(this.inputFiles),
-    );
+    final result = <AssetId>[];
     // Access libraries
-    await for (final input in inputs) {
+    await for (final input in buildStep.findAssets(Glob(inputFiles))) {
       // Check if input file is a library.
-      bool isLibrary = await buildStep.resolver.isLibrary(input);
-      if (isLibrary) {
+      if (await buildStep.resolver.isLibrary(input)) {
         result.add(input);
       }
     }
@@ -110,28 +92,22 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   ///
   /// Throws [BuilderError] if a dependency cycle is detected.
   Future<List<AssetId>> orderedLibraryAssetIds(BuildStep buildStep) async {
-    // Find matching input files.
-    final Stream<AssetId> inputs = await buildStep.findAssets(
-      Glob(this.inputFiles),
-    );
-
     final assetGraph = DirectedGraph<AssetId>({},
         comparator: ((v1, v2) => -v1.data.compareTo(v2.data)));
 
     // An assetId map of all input libraries with the uri as key.
-    final Map<Uri, Vertex<AssetId>> assetMap = {};
+    final assetMap = <Uri, Vertex<AssetId>>{};
 
     // Access libraries
-    await for (final input in inputs) {
+    await for (final input in buildStep.findAssets(Glob(inputFiles))) {
       // Check if input file is a library.
-      bool isLibrary = await buildStep.resolver.isLibrary(input);
-      if (!isLibrary) continue;
+      if (await buildStep.resolver.isLibrary(input)) continue;
       assetMap[input.uri] = Vertex<AssetId>(input);
       assetGraph.addEdges(assetMap[input.uri], []);
     }
 
     for (final Vertex<AssetId> vertex in assetGraph) {
-      final List<Vertex<AssetId>> connectedVertices = [];
+      final connectedVertices = <Vertex<AssetId>>[];
 
       // Read library.
       final library = await buildStep.resolver.libraryFor(vertex.data);
@@ -156,14 +132,13 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
       assetGraph.addEdges(vertex, connectedVertices);
     }
 
-    final List<Vertex<AssetId>> topologicalOrdering =
-        assetGraph.topologicalOrdering;
+    final topologicalOrdering = assetGraph.topologicalOrdering;
 
     if (topologicalOrdering == null) {
       // Find the first cycle
       final cycle = assetGraph.cycle.map<AssetId>((vertex) => vertex.data);
 
-      throw BuilderError(
+      throw ErrorOf<SyntheticBuilder>(
           message: 'Circular dependency detected.',
           expectedState: 'Input files must not include each other. '
               'Alternatively, set constructor parameter "sortAssets: false".',

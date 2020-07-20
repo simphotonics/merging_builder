@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:build/build.dart';
+import 'package:exception_templates/exception_templates.dart';
 import 'package:glob/glob.dart';
 import 'package:lazy_evaluation/lazy_evaluation.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart' show Generator, LibraryReader;
 
-import '../errors/builder_error.dart';
 import 'formatter.dart';
 import 'synthetic_input.dart';
 import 'synthetic_builder.dart';
@@ -69,27 +69,21 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// from the root directory of the package.
   final String root;
 
-  /// Returns the output file name.
-  String get outputPath => path.basename(outputFiles);
-
-  /// Returns the output directory name.
-  String get outputDirectory => path.dirname(outputFiles);
-
   /// Returns a list of output file paths.
   List<String> _outputFileNames() {
-    final List<String> result = [];
+    final result = <String>[];
     SyntheticInput.validatePath<S>(inputFiles);
     SyntheticInput.validatePath<S>(outputFiles);
     final resolvedInputFiles = Glob(inputFiles);
     for (final inputEntity in resolvedInputFiles.listSync(root: root)) {
       final basename = path.basenameWithoutExtension(inputEntity.path);
-      String outputFileName = outputFiles.replaceAll(
+      final outputFileName = outputFiles.replaceAll(
         RegExp(r'\(\*\)'),
         basename,
       );
       // Check if output clashes with input files.
       if (path.equals(outputFileName, inputEntity.path)) {
-        throw BuilderError(
+        throw ErrorOf<StandaloneBuilder>(
             message: 'Output file clashes with input file!',
             expectedState: 'Output files must not overwrite input files. '
                 'Check the [StandaloneBuilder] constructor argument [outputFiles].',
@@ -112,9 +106,9 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
 
   @override
   FutureOr<void> build(BuildStep buildStep) async {
-    final List<AssetId> libAssetIds = await libraryAssetIds(buildStep);
+    final libAssetIds = await libraryAssetIds(buildStep);
     // Accessing libraries.
-    for (final libAssetId in libAssetIds ?? []) {
+    for (final libAssetId in libAssetIds ?? <AssetId>[]) {
       final library = LibraryReader(
         await buildStep.resolver.libraryFor(libAssetId),
       );
@@ -135,7 +129,7 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
 
   /// Returns path of the output file for a given input file [assetId].
   String _outputFile(AssetId assetId) {
-    final String basename = path.basenameWithoutExtension(assetId.path);
+    final basename = path.basenameWithoutExtension(assetId.path);
     return outputFiles.replaceAll(RegExp(r'\(\*\)'), basename);
   }
 }

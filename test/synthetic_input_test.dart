@@ -1,9 +1,9 @@
+import 'package:exception_templates/exception_templates.dart';
 import 'package:merging_builder/merging_builder.dart';
-import 'package:merging_builder/src/errors/builder_error.dart';
 import 'package:test/test.dart';
 
 /// Tests class `SyntheticInput`.
-main() {
+void main() {
   final lib = $Lib$();
   final package = $Package$();
 
@@ -28,7 +28,7 @@ main() {
       try {
         SyntheticInput.validatePath<$Lib$>('test/*.dart');
       } catch (e) {
-        expect(e, isA<BuilderError>());
+        expect(e, isA<ErrorOf<SyntheticInput>>());
       }
     });
   });

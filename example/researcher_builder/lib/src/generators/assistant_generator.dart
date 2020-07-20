@@ -23,7 +23,7 @@ class AssistantGenerator extends GeneratorForAnnotation<AddNames> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    final List<String> result = [];
+    final result = <String>[];
     if (element is ClassElement) {
       final nameObjects =
           element.getField('names')?.computeConstantValue()?.toListValue();

@@ -8,7 +8,7 @@ import 'src/generators/assistant_generator.dart';
 /// Honours the options: `input_files`, `output_file`, `header`, `footer`,
 /// and `sort_assets` that can be set in `build.yaml`.
 Builder addNamesBuilder(BuilderOptions options) {
-  BuilderOptions defaultOptions = BuilderOptions({
+  final defaultOptions = BuilderOptions({
     'input_files': 'lib/*.dart',
     'output_file': 'lib/output.dart',
     'header': AddNamesGenerator.header,
@@ -30,7 +30,7 @@ Builder addNamesBuilder(BuilderOptions options) {
 
 /// Defines a standalone builder.
 Builder assistantBuilder(BuilderOptions options) {
-  BuilderOptions defaultOptions = BuilderOptions({
+  final defaultOptions = BuilderOptions({
     'input_files': 'lib/*.dart',
     'output_files': 'lib/output/assistant_(*).dart',
     'header': AssistantGenerator.header,
