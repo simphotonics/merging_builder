@@ -15,7 +15,7 @@ import 'synthetic_input.dart';
 ///
 /// - Input files must be specified using [Glob] syntax.
 ///
-/// - Requires a generator extending [MergingGenerator<T, A>].
+/// - Requires a generator extending [MergingGenerator].
 class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// Constructs a [MergingBuilder] object.
   ///
