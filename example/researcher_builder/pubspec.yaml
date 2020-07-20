@@ -14,5 +14,6 @@ dependencies:
   researcher:
     path: ../researcher
   source_gen: ^0.9.5
+  quote_buffer: ^0.1.5
 
 dev_dependencies:
