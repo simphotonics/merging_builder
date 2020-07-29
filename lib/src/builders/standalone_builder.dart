@@ -14,11 +14,11 @@ import 'synthetic_builder.dart';
 /// Builder that uses synthetic input and
 /// creates one output file for each input file.
 ///
-/// Input files must be specified using [Glob] syntax.
-/// The output path must be specified.
+/// * Input files must be specified using [Glob] syntax.
+/// * The output path must be specified.
 ///
-/// The type parameter [S] represents the synthetic input used by the builder.
-/// Valid types are [$Lib$] and [$Package$], both extending [SyntheticInput].
+/// * The type parameter [S] represents the synthetic input used by the builder.
+///   Valid types are [$Lib$] and [$Package$], both extending [SyntheticInput].
 class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// Constructs a [StandAloneBuilder] object.
   ///
@@ -47,7 +47,7 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
             header: header,
             footer: footer,
             formatOutput: formatOutput) {
-    _resolvedOutputFiles = Lazy(_outputFileNames);
+    _resolvedOutputFiles = Lazy(_outputPaths);
   }
 
   /// Path to output files.
@@ -69,36 +69,11 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// from the root directory of the package.
   final String root;
 
-  /// Returns a list of output file paths.
-  List<String> _outputFileNames() {
-    final result = <String>[];
-    SyntheticInput.validatePath<S>(inputFiles);
-    SyntheticInput.validatePath<S>(outputFiles);
-    final resolvedInputFiles = Glob(inputFiles);
-    for (final inputEntity in resolvedInputFiles.listSync(root: root)) {
-      final basename = path.basenameWithoutExtension(inputEntity.path);
-      final outputFileName = outputFiles.replaceAll(
-        RegExp(r'\(\*\)'),
-        basename,
-      );
-      // Check if output clashes with input files.
-      if (path.equals(outputFileName, inputEntity.path)) {
-        throw ErrorOf<StandaloneBuilder>(
-            message: 'Output file clashes with input file!',
-            expectedState: 'Output files must not overwrite input files. '
-                'Check the [StandaloneBuilder] constructor argument [outputFiles].',
-            invalidState: 'Output: $outputFileName is also an input file.');
-      }
-      result.add(outputFileName);
-    }
-    return result;
-  }
-
-  /// Returns a map of type `<String, List<String>>`
+  /// Returns a map of type `Map<String, List<String>>`
   /// with content {synthetic input: list of output files}.
   ///
   /// The builder uses the synthetic input specified by the
-  /// type parameter [S extends SyntheticInput].
+  /// type parameter [S].
   @override
   Map<String, List<String>> get buildExtensions => {
         syntheticInput.value: _resolvedOutputFiles.value,
@@ -127,9 +102,35 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
     }
   }
 
-  /// Returns path of the output file for a given input file [assetId].
+  /// Returns the path of the output file for a given input file [assetId].
   String _outputFile(AssetId assetId) {
     final basename = path.basenameWithoutExtension(assetId.path);
     return outputFiles.replaceAll(RegExp(r'\(\*\)'), basename);
+  }
+
+  /// Returns a list of output file paths.
+  List<String> _outputPaths() {
+    final result = <String>[];
+    SyntheticInput.validatePath<S>(inputFiles);
+    SyntheticInput.validatePath<S>(outputFiles);
+    final resolvedInputFiles = Glob(inputFiles);
+    for (final inputEntity in resolvedInputFiles.listSync(root: root)) {
+      final basename = path.basenameWithoutExtension(inputEntity.path);
+      final outputFileName = outputFiles.replaceAll(
+        RegExp(r'\(\*\)'),
+        basename,
+      );
+      // Check if output clashes with input files.
+      if (path.equals(outputFileName, inputEntity.path)) {
+        throw ErrorOf<StandaloneBuilder>(
+            message: 'Output file clashes with input file!',
+            expectedState: 'Output files must not overwrite input files. '
+                'Check the [StandaloneBuilder] '
+                'constructor argument [outputFiles].',
+            invalidState: 'Output: $outputFileName is also an input file.');
+      }
+      result.add(outputFileName);
+    }
+    return result;
   }
 }
