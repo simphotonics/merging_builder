@@ -101,9 +101,10 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
     // Access libraries
     await for (final input in buildStep.findAssets(Glob(inputFiles))) {
       // Check if input file is a library.
-      if (await buildStep.resolver.isLibrary(input)) continue;
-      assetMap[input.uri] = Vertex<AssetId>(input);
-      assetGraph.addEdges(assetMap[input.uri], []);
+      if (await buildStep.resolver.isLibrary(input)) {
+        assetMap[input.uri] = Vertex<AssetId>(input);
+        assetGraph.addEdges(assetMap[input.uri], []);
+      }
     }
 
     for (final Vertex<AssetId> vertex in assetGraph) {
