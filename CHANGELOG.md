@@ -1,3 +1,8 @@
+## 0.1.5
+
+Added abstract class [`SyntheticBuilder`][SyntheticBuilder].
+
+
 ## 0.1.4
 
 Package now uses `quote_builder` as dev_dependency.
