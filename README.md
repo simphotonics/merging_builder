@@ -106,6 +106,8 @@ In the [example] provided with this library, the package defining a new builder 
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
    * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
 
+   
+
     ```Dart
      import 'package:build/build.dart';
      import 'package:merging_builder/merging_builder.dart';
@@ -127,7 +129,7 @@ In the [example] provided with this library, the package defining a new builder 
 
        // Apply user set options.
        options = defaultOptions.overrideWith(options);
-       return MergingBuilder<List<String>, $Lib$>(
+       return MergingBuilder<List<String>, LibDir>(
          generator: AddNamesGenerator(),
          inputFiles: options.config['input_files'],
          outputFile: options.config['output_file'],
@@ -147,7 +149,7 @@ In the [example] provided with this library, the package defining a new builder 
          'root': ''
        });
        options = defaultOptions.overrideWith(options);
-       return StandaloneBuilder<$Lib$>(
+       return StandaloneBuilder<LibDir>(
            generator: AssistantGenerator(),
            inputFiles: options.config['input_files'],
            outputFiles: options.config['output_files'],
@@ -230,9 +232,9 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
 The classes [`MergingBuilder<T, S extends SyntheticInput>`][class-merging-builder]
 and [`StandaloneBuilder<S extends SyntheticInput>`][class-standalone-builder]
 use *synthetic input* which must be specified
-by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type parameter `S`.
+by choosing either [`LibDir`][LibDir] or [`PackageDir`][PackageDir] as type parameter `S`.
 
-[`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
+[`LibDir`][LibDir] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
 about *synthetic input* see:
 [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
 
@@ -286,7 +288,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [class-standalone-builder]: https://github.com/simphotonics/merging_builder#class-standalone-builder
 
-[example]: example
+[example]: https://github.com/simphotonics/merging_builder/tree/master/example
 
 [Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
 
@@ -294,7 +296,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [Glob]: https://pub.dev/packages/glob
 
-[$Lib$]: https://pub.dev/documentation/merging_builder/latest/merging_builder/$Lib$-class.html
+[LibDir]: https://pub.dev/documentation/merging_builder/latest/merging_builder/LibDir-class.html
 
 [MergingBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingBuilder-class.html
 
@@ -302,7 +304,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [MergingGenerator]: https://pub.dev/documentation/merging_builder/latest/merging_builder/MergingGenerator-class.html
 
-[$Package$]: https://pub.dev/documentation/merging_builder/latest/merging_builder/$Package$-class.html
+[PackageDir]: https://pub.dev/documentation/merging_builder/latest/merging_builder/PackageDir-class.html
 
 [researchers.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
 

@@ -29,8 +29,8 @@ abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
     }
   }
 
-  /// Returns an object of type [T] that will be added to the [Stream<T>]
-  /// emitted by [generateStream<T>].
+  /// Returns an object of type [T] that will be added to the `Stream`
+  /// emitted by [generateStream].
   ///
   /// * Override this method in classes extending [MergingGenerator].
   /// * This method is a generalization of [generateForAnnotatedElement].
@@ -42,12 +42,11 @@ abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
   );
 
   /// Returns the merged content that will be written to the output file by
-  /// the [MergingBuilder].
+  /// [MergingBuilder].
   ///
   /// * Override this method in classes extending [MergingGenerator].
-  ///
-  /// * Note: The [stream] contains objects generated for all annotated elements
-  /// found in all files that match the input [Glob] of the [MergingBuilder].
+  /// * Note: [stream] contains objects generated for all annotated elements
+  /// found in all files that match the input `Glob` of the [MergingBuilder].
   FutureOr<String> generateMergedContent(Stream<T> stream);
 
   /// Portion of source code included at the top of the generated file.

@@ -12,7 +12,7 @@ import 'src/input/mock_assets.dart';
 ///
 /// # pub run build_runner test -- -r expanded
 void main() {
-  final builder = MergingBuilder<List<String>, $Lib$>(
+  final builder = MergingBuilder<List<String>, LibDir>(
     generator: AddNamesGenerator(),
     inputFiles: 'lib/source_assets/researcher_*.dart',
     outputFile: 'lib/output/researchers.dart',

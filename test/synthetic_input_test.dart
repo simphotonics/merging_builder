@@ -4,35 +4,35 @@ import 'package:test/test.dart';
 
 /// Tests class `SyntheticInput`.
 void main() {
-  final lib = $Lib$();
-  final package = $Package$();
+  final lib = LibDir();
+  final package = PackageDir();
 
   group('SyntheticInput:', () {
-    test(r'instance<$Lib$>()', () {
-      expect(SyntheticInput.instance<$Lib$>(), lib);
+    test(r'instance<LibDir>()', () {
+      expect(SyntheticInput.instance<LibDir>(), lib);
     });
-    test(r'instance<$Package$>()', () {
-      expect(SyntheticInput.instance<$Package$>(), package);
+    test(r'instance<PackageDir>()', () {
+      expect(SyntheticInput.instance<PackageDir>(), package);
     });
 
     test('instance()', () {
       expect(SyntheticInput.instance(), package);
     });
     test('isValidPath<\$Lib\$>(\'lib/*.dart\') => true', () {
-      expect(SyntheticInput.isValidPath<$Lib$>('lib/*.dart'), true);
+      expect(SyntheticInput.isValidPath<LibDir>('lib/*.dart'), true);
     });
     test('isValidPath<\$Lib\$>(\'test/*.dart\') => false', () {
-      expect(SyntheticInput.isValidPath<$Lib$>('test/*.dart'), false);
+      expect(SyntheticInput.isValidPath<LibDir>('test/*.dart'), false);
     });
     test('validatePath<\$Lib\$>(\'test/*.dart\') | throws BuilderError', () {
       try {
-        SyntheticInput.validatePath<$Lib$>('test/*.dart');
+        SyntheticInput.validatePath<LibDir>('test/*.dart');
       } catch (e) {
         expect(e, isA<ErrorOf<SyntheticInput>>());
       }
     });
   });
-  group(r'$Lib$:', () {
+  group(r'LibDir:', () {
     test('baseDirectory', () {
       expect(lib.baseDirectory, 'lib');
     });
@@ -40,7 +40,7 @@ void main() {
       expect(lib.value, r'lib/$lib$');
     });
   });
-  group(r'$Package$:', () {
+  group(r'PackageDir:', () {
     test('baseDirectory', () {
       expect(package.baseDirectory, '');
     });

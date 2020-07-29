@@ -53,14 +53,12 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   final MergingGenerator<T, dynamic> generator;
 
   /// Set to true to have assets sorted in reverse topological order of
-  /// dependency. If a file B includes a file A, then A will be appear
-  /// before B.
-  ///
-  /// Defaults to false;
-  ///
-  /// Note: A [BuilderError] is thrown if [sortAssets] is `true` and
-  /// a dependency cycle is detected (e.g. File A depends on file B, and
-  /// file B depends on A, even indirectly).
+  /// dependency.
+  /// * Defaults to false.
+  /// * If a file B includes a file A, then A will be appear
+  ///   before B.
+  /// * An error is thrown if [sortAssets] is `true` and
+  /// a dependency cycle is detected.
   final bool sortAssets;
 
   @override

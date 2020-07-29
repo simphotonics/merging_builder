@@ -30,19 +30,19 @@ class MockMergingGenerator
 
 /// Tests if the builder generates the expected buildExtensions.
 void main() {
-  final libBuilder = MergingBuilder<List<double>, $Lib$>(
+  final libBuilder = MergingBuilder<List<double>, LibDir>(
     generator: MockMergingGenerator(),
     inputFiles: 'lib/input/*.dart',
     outputFile: 'lib/output/output.dart',
   );
 
-  final packageBuilder = MergingBuilder<List<double>, $Package$>(
+  final packageBuilder = MergingBuilder<List<double>, PackageDir>(
     generator: MockMergingGenerator(),
     inputFiles: 'test/input/*.dart',
     outputFile: 'test/output/output.dart',
   );
 
-  final misconfiguredlibBuilder = MergingBuilder<List<double>, $Lib$>(
+  final misconfiguredlibBuilder = MergingBuilder<List<double>, LibDir>(
     generator: MockMergingGenerator(),
     inputFiles: 'web/input/*.dart',
     outputFile: 'web/output/output.dart',
@@ -51,17 +51,17 @@ void main() {
   Map<String, List<String>> buildExtensions;
 
   group('buildExtensions', () {
-    test(r'$Lib$', () {
+    test(r'LibDir', () {
       expect(libBuilder.buildExtensions, {
         r'lib/$lib$': ['lib/output/output.dart'],
       });
     });
-    test(r'$Package$', () {
+    test(r'PackageDir', () {
       expect(packageBuilder.buildExtensions, {
         r'$package$': ['test/output/output.dart'],
       });
     });
-    test(r'$Lib$ throws', () {
+    test(r'LibDir throws', () {
       try {
         buildExtensions = misconfiguredlibBuilder.buildExtensions;
       } catch (e) {

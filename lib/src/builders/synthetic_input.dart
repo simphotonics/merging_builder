@@ -16,17 +16,17 @@ abstract class SyntheticInput {
   @override
   String toString() => value;
 
-  /// Returns an instance of [$Lib$] or [$Package$].
+  /// Returns an instance of [LibDir] or [PackageDir].
   static T instance<T extends SyntheticInput>() {
-    return (T == $Lib$) ? $Lib$() : $Package$();
+    return (T == LibDir) ? LibDir() : PackageDir();
   }
 
-  /// Returns [true] if [path] is a valid input or output path.
+  /// Returns `true` if [path] is a valid input or output path.
   ///
-  /// Note: Synthetic input [$Lib$] supports only input/output files located
+  /// Note: Synthetic input [LibDir] supports only input/output files located
   /// below the package directory `lib`.
   static bool isValidPath<T extends SyntheticInput>(String path) {
-    if (T == $Lib$ && path.substring(0, 'lib'.length) != 'lib') {
+    if (T == LibDir && path.substring(0, 'lib'.length) != 'lib') {
       return false;
     } else {
       return true;
@@ -35,47 +35,48 @@ abstract class SyntheticInput {
 
   /// Validates an input/output path.
   ///
-  /// Throws [BuilderError] if the synthetic input is `r\lib/$lib$'\'`
-  /// (type parameter is [$Lib$]) and the path does not start with `lib`.
+  /// Throws [ErrorOf] if the synthetic input is specified as
+  /// usign the type parameter [LibDir]) and the path does not start with `lib`.
   static void validatePath<T extends SyntheticInput>(String path) {
     if (!SyntheticInput.isValidPath<T>(path)) {
       throw ErrorOf<SyntheticInput>(
           message: 'Invalid file path found.',
           expectedState: 'A path starting with \'lib\'.'
-              'To access files outside \'lib\' change the builder type parameter to [Package].',
+              'To access files outside \'lib\' change the builder '
+              'type parameter to [PackageDir].',
           invalidState: 'The actual path is: $path.');
     }
   }
 }
 
-/// Synthetic input representing files under the [lib] directory.
+/// Synthetic input representing files under the `lib` directory.
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
 @sealed
-class $Lib$ extends SyntheticInput {
-  const $Lib$._(String value) : super._(value);
+class LibDir extends SyntheticInput {
+  const LibDir._(String value) : super._(value);
 
-  static $Lib$ _instance;
+  static LibDir _instance;
 
-  factory $Lib$() {
-    return _instance ??= $Lib$._(r'lib/$lib$');
+  factory LibDir() {
+    return _instance ??= LibDir._(r'lib/$lib$');
   }
 
   @override
   String get baseDirectory => 'lib';
 }
 
-/// Synthetic input representing files under the [root] directory.
+/// Synthetic input representing files under the `root` directory.
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
 @sealed
-class $Package$ extends SyntheticInput {
-  const $Package$._(String value) : super._(value);
+class PackageDir extends SyntheticInput {
+  const PackageDir._(String value) : super._(value);
 
-  static $Package$ _instance;
+  static PackageDir _instance;
 
-  factory $Package$() {
-    return _instance ??= $Package$._(r'$package$');
+  factory PackageDir() {
+    return _instance ??= PackageDir._(r'$package$');
   }
 
   @override

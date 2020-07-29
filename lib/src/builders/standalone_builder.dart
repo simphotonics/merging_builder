@@ -18,9 +18,9 @@ import 'synthetic_builder.dart';
 /// * The output path must be specified.
 ///
 /// * The type parameter [S] represents the synthetic input used by the builder.
-///   Valid types are [$Lib$] and [$Package$], both extending [SyntheticInput].
+///   Valid types are [LibDir] and [PackageDir], both extending [SyntheticInput].
 class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
-  /// Constructs a [StandAloneBuilder] object.
+  /// Constructs a [StandaloneBuilder] object.
   ///
   /// - [inputFiles] defaults to: `'lib/*.dart'`.
   ///

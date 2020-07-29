@@ -1,7 +1,10 @@
+## 0.1.6
+
+Renamed classes `LibDir` and `PackageDir` to `LibDir` and `PackageDir`.
+
 ## 0.1.5
 
 Added abstract class [`SyntheticBuilder`][SyntheticBuilder].
-
 
 ## 0.1.4
 
@@ -60,3 +63,5 @@ Renamed generator method `mergedContent` to `generateMergedContent`.
 ## 0.0.1
 
 Initial version of the library.
+
+[SyntheticBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/SyntheticBuilder-class.html

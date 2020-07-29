@@ -4,7 +4,7 @@ import 'package:source_gen/source_gen.dart';
 
 /// StandaloneBuilder for testing purposes with
 /// hardcoded buildExtensions.
-class MockStandaloneBuilder extends StandaloneBuilder<$Lib$> {
+class MockStandaloneBuilder extends StandaloneBuilder<LibDir> {
   MockStandaloneBuilder({
     String inputFiles = 'lib/*.dart',
     String outputFiles = 'lib/standalone_(*).dart',

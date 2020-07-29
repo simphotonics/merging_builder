@@ -1,11 +1,12 @@
 name: merging_builder
 
 description:
-  Generic builder that reads several input
-  files and writes merged output to a stand-alone file.
-  The builder uses synthetic input.
+  MergingBuilder reads several input
+  files and writes merged output to one file.
+  StandaloneBuilder enables output to a custom
+  folder with custom output file name.
 
-version: 0.1.5
+version: 0.1.6
 
 homepage: https://github.com/simphotonics/merging_builder
 

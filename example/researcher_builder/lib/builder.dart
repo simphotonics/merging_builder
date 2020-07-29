@@ -18,7 +18,7 @@ Builder addNamesBuilder(BuilderOptions options) {
 
   // Apply user set options.
   options = defaultOptions.overrideWith(options);
-  return MergingBuilder<List<String>, $Lib$>(
+  return MergingBuilder<List<String>, LibDir>(
     generator: AddNamesGenerator(),
     inputFiles: options.config['input_files'],
     outputFile: options.config['output_file'],
@@ -38,7 +38,7 @@ Builder assistantBuilder(BuilderOptions options) {
     'root': ''
   });
   options = defaultOptions.overrideWith(options);
-  return StandaloneBuilder<$Lib$>(
+  return StandaloneBuilder<LibDir>(
       generator: AssistantGenerator(),
       inputFiles: options.config['input_files'],
       outputFiles: options.config['output_files'],

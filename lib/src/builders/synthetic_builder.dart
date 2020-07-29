@@ -8,8 +8,7 @@ import 'package:meta/meta.dart';
 import 'formatter.dart';
 import 'synthetic_input.dart';
 
-/// Builder class for creating new files from existing ones.
-/// Uses synthetic input.
+/// Base class of a builder that uses synthetic input.
 ///
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
@@ -37,12 +36,12 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   /// generated file.
   final String footer;
 
-  /// A function with signature [String Function(String input)].
-  /// Defaults to [DartFormatter().format].
+  /// A function with signature `String Function(String input)`.
+  /// Defaults to `DartFormatter().format`.
   ///
   /// Is used to format the merged output.
   /// To disable formatting one may pass a closure returning the
-  /// input: `(input) => input;` as argument for [formatOutput].
+  /// input: `(input) => input;` as argument for `formatOutput`.
   final Formatter formatter;
 
   /// The synthetic input used by this builder.
@@ -52,7 +51,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   /// after adding the header and footer.
   ///
   /// The final output is formatted using the
-  /// function provided as constructor argument [formatOutput].
+  /// function provided as constructor argument for `formatOutput`.
   String arrangeContent(String source, {String generatedBy = ''}) {
     // Add header to buffer.
     // Expand header:
@@ -73,7 +72,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   }
 
   /// Returns a list of unordered library asset ids.
-  /// All non-library inputs (e.g. part files) are skipped.
+  /// * All non-library inputs (e.g. part files) are skipped.
   Future<List<AssetId>> libraryAssetIds(BuildStep buildStep) async {
     final result = <AssetId>[];
     // Access libraries
@@ -87,10 +86,10 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   }
 
   /// Returns a list of library asset ids ordered in reverse topological
-  /// dependency order. If a file B includes a file A, then A will be appear
+  /// dependency order.
+  /// * If a file B includes a file A, then A will be appear
   /// before B.
-  ///
-  /// Throws [BuilderError] if a dependency cycle is detected.
+  /// * Throws [ErrorOf] if a dependency cycle is detected.
   Future<List<AssetId>> orderedLibraryAssetIds(BuildStep buildStep) async {
     final assetGraph = DirectedGraph<AssetId>({},
         comparator: ((v1, v2) => -v1.data.compareTo(v2.data)));
