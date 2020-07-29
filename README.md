@@ -7,13 +7,11 @@
 
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
-The library [`merging_builder`][merging_builder] includes the classes
-[`MergingBuilder<T, S extends SyntheticInput`][class-merging-builder] and [`StandaloneBuilder<S extends SyntheticInput>`][class-standalone-builder].
+The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
 
-* [MergingBuilder] reads **several input files** and writes merged output to **one output file**. The builder provides the option to sort the input files in reverse topological order.
+* [`MergingBuilder`][class-merging-builder] reads **several input files** and writes merged output to **one output file**. The builder provides the option to sort the input files in reverse topological order.
 
-* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
-In this context, **standalone** means the output files may be written to a **custom folder** and not only the **extension** but the
+* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location. In this context, **standalone** means the output files may be written to a **custom folder** and not only the **extension** but the
 **name** of the output file can be configured.
 
 
@@ -225,7 +223,7 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
 
 ## Implementation Details
 
-The classes [`MergingBuilder<T, S extends SyntheticInput`][class-merging-builder]
+The classes [`MergingBuilder<T, S extends SyntheticInput>`][class-merging-builder]
 and [`StandaloneBuilder<S extends SyntheticInput>`][class-standalone-builder]
 use *synthetic input* which must be specified
 by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type parameter `S`.
