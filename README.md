@@ -99,8 +99,10 @@ In the [example] provided with this library, the package defining a new builder 
 
    </details>
 
-3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package. The generator `AddNamesGenerator` extends `MergingGenerator<List<String>, AddNames>` (see step 2). Input sources may be specified using wildcard characters supported by [`Glob`][Glob]. The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`,
-and `sort_assets` that can be set in the file `build.yaml` located in the package `researcher` (see step 5).
+3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package.
+   * The generator `AddNamesGenerator` shown below extends `MergingGenerator<List<String>, AddNames>` (see step 2).
+   * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
+   * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
 
     ```Dart
      import 'package:build/build.dart';
