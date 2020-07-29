@@ -8,41 +8,13 @@
 Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
 
 The library [`merging_builder`][merging_builder] includes the classes
-[`MergingBuilder`][class-merging-builder] and [`StandaloneBuilder`][class-standalone-builder]. Both builders use *synthetic input* which must be specified
-by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type parameter `S` (see figure below).
+[`MergingBuilder<T, S extends SyntheticInput`][class-merging-builder] and [`StandaloneBuilder<S extends SyntheticInput>`][class-standalone-builder].
 
-[`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
-about *synthetic input* see:
-[Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
+* [MergingBuilder] reads **several input files** and writes merged output to **one output file**. The builder provides the option to sort the input files in reverse topological order.
 
-### Class Merging Builder
-
-[MergingBuilder] reads **several input files** and writes merged output to **one output file**.
-The builder provides the option to sort the input files in reverse topological order. If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
-generating code that needs to list variables or call functions in order of dependence. To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
-
-A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
-
-The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
-
-The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
-
-
-![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
-
-### Class Standalone Builder
-
-[`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
-*Standalone* means the output files may be written to a custom folder and not only the extension but the
-name of the output file can be configured.
-
-The input file path (constructor parameter `inputFiles`) may include
-wild-card notation supported by [`Glob`][Glob].
-
-Output files are specified by using the custom symbol
-`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
-
-Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command (see point 7 in the next section) from the root directory of the package the build is applied to.
+* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
+In this context, **standalone** means the output files may be written to a **custom folder** and not only the **extension** but the
+**name** of the output file can be configured.
 
 
 ## Usage
@@ -251,6 +223,45 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
    # pub run build_runner build --delete-conflicting-outputs --verbose
    ```
 
+## Implementation Details
+
+The classes [`MergingBuilder<T, S extends SyntheticInput`][class-merging-builder]
+and [`StandaloneBuilder<S extends SyntheticInput>`][class-standalone-builder]
+use *synthetic input* which must be specified
+by choosing either [`$Lib$`][$Lib$] or [`$Package$`][$Package$] as type parameter `S`.
+
+[`$Lib$`][$Lib$] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
+about *synthetic input* see:
+[Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
+
+### Class - Merging Builder
+
+[`MergingBuilder`][MergingBuilder] reads **several input files** and writes merged output to **one output file**.
+The builder provides the option to sort the input files in reverse topological order. If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
+generating code that needs to list variables or call functions in order of dependence. To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
+
+A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
+
+The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
+
+The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
+
+
+![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
+
+### Class - Standalone Builder
+
+[`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
+*Standalone* means the output files may be written to a custom folder and not only the extension but the
+name of the output file can be configured.
+
+The input file path (constructor parameter `inputFiles`) may include
+wild-card notation supported by [`Glob`][Glob].
+
+Output files are specified by using the custom symbol
+`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
+
+Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command (see point 7 in the next section) from the root directory of the package the build is applied to.
 ## Examples
 
 For further information on how to use [`MergingBuilder`][MergingBuilder] see [example].
