@@ -1,6 +1,6 @@
-## 0.2.0-nullsafety
+## 0.2.0
 
-Migrated to null-safety. 
+Migrated to null-safety.
 
 ## 0.1.6
 

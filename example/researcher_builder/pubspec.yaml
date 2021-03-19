@@ -14,13 +14,13 @@ dependencies:
   build: ^2.0.0
   build_config: ^0.4.7
   quote_buffer: ^0.2.2
-  source_gen: ^0.9.10+4
+  source_gen: ^1.0.0
 
 dev_dependencies: null
 
 dependency_overrides:
-  source_gen:
-    git:
-      url: git@github.com:dart-lang/source_gen.git
-      ref: master
-      path: source_gen
+  # source_gen:
+  #   git:
+  #     url: git@github.com:dart-lang/source_gen.git
+  #     ref: master
+  #     path: source_gen
