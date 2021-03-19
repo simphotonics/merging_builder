@@ -33,6 +33,6 @@ class AssistantGenerator extends GeneratorForAnnotation<AddNames> {
       }
       return 'final String assistants = \'${result.join(', ')}\';';
     }
-    return null;
+    return '';
   }
 }

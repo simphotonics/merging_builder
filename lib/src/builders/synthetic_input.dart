@@ -18,7 +18,7 @@ abstract class SyntheticInput {
 
   /// Returns an instance of [LibDir] or [PackageDir].
   static T instance<T extends SyntheticInput>() {
-    return (T == LibDir) ? LibDir() : PackageDir();
+    return (T == LibDir) ? LibDir() as T : PackageDir() as T;
   }
 
   /// Returns `true` if [path] is a valid input or output path.
@@ -56,7 +56,7 @@ abstract class SyntheticInput {
 class LibDir extends SyntheticInput {
   const LibDir._(String value) : super._(value);
 
-  static LibDir _instance;
+  static LibDir? _instance;
 
   factory LibDir() {
     return _instance ??= LibDir._(r'lib/$lib$');
@@ -73,7 +73,7 @@ class LibDir extends SyntheticInput {
 class PackageDir extends SyntheticInput {
   const PackageDir._(String value) : super._(value);
 
-  static PackageDir _instance;
+  static PackageDir? _instance;
 
   factory PackageDir() {
     return _instance ??= PackageDir._(r'$package$');

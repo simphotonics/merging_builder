@@ -1,3 +1,7 @@
+## 0.2.0-nullsafety
+
+Migrated to null-safety. 
+
 ## 0.1.6
 
 Renamed classes `LibDir` and `PackageDir` to `LibDir` and `PackageDir`.

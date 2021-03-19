@@ -48,8 +48,6 @@ void main() {
     outputFile: 'web/output/output.dart',
   );
 
-  Map<String, List<String>> buildExtensions;
-
   group('buildExtensions', () {
     test(r'LibDir', () {
       expect(libBuilder.buildExtensions, {
@@ -63,12 +61,10 @@ void main() {
     });
     test(r'LibDir throws', () {
       try {
-        buildExtensions = misconfiguredlibBuilder.buildExtensions;
+        final buildExtensions = misconfiguredlibBuilder.buildExtensions;
+        buildExtensions.clear();
       } catch (e) {
         expect(e, isA<ErrorOf<SyntheticInput>>());
-      }
-      if (buildExtensions != null) {
-        // Mock code to avoid lint: 'Unused local variable.
       }
     });
   });

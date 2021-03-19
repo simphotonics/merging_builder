@@ -26,9 +26,11 @@ class AddNumbersGenerator extends MergingGenerator<num, AddNumbers> {
     BuildStep buildStep,
   ) {
     if (element is ClassElement) {
-      return element.getField('number')?.computeConstantValue()?.toIntValue();
+      return element.getField('number')?.computeConstantValue()?.toIntValue() ??
+          double.nan;
+    } else {
+      return double.nan;
     }
-    return null;
   }
 
   /// Returns merged content.

@@ -44,7 +44,7 @@ dartanalyzer \
 echo
 echo -e "${CYAN}=== Testing $PWD...${RESET}"
 echo
-pub run build_runner test -- -r expanded
+pub run test -r expanded
 
 
 # ================

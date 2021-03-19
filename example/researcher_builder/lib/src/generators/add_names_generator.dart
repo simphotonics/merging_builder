@@ -35,7 +35,7 @@ class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
       }
       return result;
     }
-    return null;
+    return <String>['Could not read name'];
   }
 
   /// Returns the merged content.

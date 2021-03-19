@@ -1,5 +1,4 @@
 import 'package:merging_builder/merging_builder.dart';
-import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
 /// StandaloneBuilder for testing purposes with
@@ -8,7 +7,7 @@ class MockStandaloneBuilder extends StandaloneBuilder<LibDir> {
   MockStandaloneBuilder({
     String inputFiles = 'lib/*.dart',
     String outputFiles = 'lib/standalone_(*).dart',
-    @required Generator generator,
+    required Generator generator,
     String header = '',
     String footer = '',
   }) : super(

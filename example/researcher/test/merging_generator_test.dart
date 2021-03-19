@@ -16,11 +16,19 @@ import 'src/mock_builders/mock_merging_builder.dart';
 /// Note: The path to the input files is specified relative to the main
 /// directory of [merging_builder].
 Future<void> main() async {
-  final libA = LibraryReader(await resolveSource(researcher_a_dot_dart,
-      (resolver) => resolver.findLibraryByName('researcher_a')));
+  final libA = LibraryReader(
+    await resolveSource(
+        researcher_a_dot_dart,
+        (resolver) async =>
+            (await resolver.findLibraryByName('researcher_a'))!),
+  );
 
-  final libB = LibraryReader(await resolveSource(researcher_b_dot_dart,
-      (resolver) => resolver.findLibraryByName('researcher_b')));
+  final libB = LibraryReader(
+    await resolveSource(
+        researcher_b_dot_dart,
+        (resolver) async =>
+            (await resolver.findLibraryByName('researcher_b'))!),
+  );
 
   final numBuilder = MockMergingBuilder<num>(
     generator: AddNumbersGenerator(),

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:build/build.dart';
 import 'package:exception_templates/exception_templates.dart';
 import 'package:glob/glob.dart';
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path show equals;
 import 'package:source_gen/source_gen.dart' show LibraryReader;
 
@@ -18,31 +17,31 @@ import 'synthetic_input.dart';
 /// - Requires a generator extending [MergingGenerator].
 class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// Constructs a [MergingBuilder] object.
-  ///
-  /// - [inputFiles] defaults to: `'lib/*.dart'`.
-  ///
-  /// - [outputFile] defaults to: `'lib/merged_output.dart'`.
-  ///
-  /// - [generator] extending [MergingGenerator<T, A>] is required.
-  ///
-  /// - [header] defaults to: `''`
-  ///
-  /// - [footer] defaults to : `''`
-  ///
-  /// - [formatOutput] defaults to: `DartFormatter().format`.
+  /// * `inputFiles`: Path to the input files relative to the
+  /// package root directory. Glob-style syntax is
+  /// allowed, defaults to: `'lib/*.dart'`.
+  /// * `outputFile`: defaults to: `'lib/merged_output.dart'`.
+  /// * `generator`: Must extend `MergingGenerator<T, A>`.
+  /// * `header`: `String` that will be inserted at the top of the
+  /// generated file below the 'DO NOT EDIT' warning message.
+  /// * `footer`: String that will be inserted at the very bottom of the
+  /// generated file.
+  /// * `formatter`: A function with signature `String Function(String input)`
+  /// that is used to format the generated source code.
+  /// The default formatter is: `DartFormatter().format`.
   MergingBuilder({
     String inputFiles = 'lib/*.dart',
     this.outputFile = 'lib/merged_output.dart',
-    @required this.generator,
+    required this.generator,
     String header = '',
     String footer = '',
     this.sortAssets = false,
-    Formatter formatOutput,
+    Formatter? formatter,
   }) : super(
           inputFiles: inputFiles,
           header: header,
           footer: footer,
-          formatOutput: formatOutput,
+          formatter: formatter,
         );
 
   /// Path to output file relative to the package root directory.
@@ -108,7 +107,7 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// by iterating over each library file asset.
   Stream<T> _combineStreams(
     BuildStep buildStep,
-    List<AssetId> libraryAssetIds,
+    Iterable<AssetId> libraryAssetIds,
   ) async* {
     // Accessing libraries.
     for (final libraryAssetId in libraryAssetIds) {
@@ -119,7 +118,7 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
       // Calling generator.generateStream. An object of type [T] is
       // emitted for each class defined in library that is annotated with [A].
       log.fine('Running ${generator.runtimeType} on: ${libraryAssetId.path}.');
-      final streamOfT = await generator.generateStream(library, buildStep);
+      final streamOfT = generator.generateStream(library, buildStep);
 
       // Combining all objects of type [T] into a stream.
       await for (final T t in streamOfT) {

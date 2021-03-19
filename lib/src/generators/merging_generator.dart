@@ -52,12 +52,12 @@ abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
   /// Portion of source code included at the top of the generated file.
   /// * Should be specified as [header] when constructing
   ///   and instance of [MergingBuilder].
-  static String get header => null;
+  static String get header => '';
 
   /// Portion of source code included at the very bottom of the generated file.
   /// * Should be specified as [footer] when constructing an instance of
   ///   [MergingBuilder].
-  static String get footer => null;
+  static String get footer => '';
 
   @override
   FutureOr<String> generateForAnnotatedElement(
@@ -65,6 +65,6 @@ abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    return null;
+    return '';
   }
 }

@@ -1,17 +1,28 @@
+import 'package:crypto/src/digest.dart';
+import 'package:build/src/resource/resource.dart';
+import 'package:build/src/asset/id.dart';
+import 'package:build/src/analyzer/resolver.dart';
+import 'package:analyzer/dart/element/element.dart';
+import 'dart:convert';
+
+import 'dart:async';
+
 import 'package:dart_style/dart_style.dart';
+import 'package:glob/glob.dart';
 import 'package:merging_builder/merging_builder.dart';
 import 'package:merging_builder/src/builders/formatter.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:build/build.dart' show BuildStep;
 
 /// Mock builder with methods: [mergedContent] and [_combinedStream].
 /// Used for testing purposes.
 class MockMergingBuilder<T> {
   MockMergingBuilder({
-    this.generator,
-    this.header,
-    this.footer,
-    this.libraries,
-    Formatter formatOutput,
+    required this.generator,
+    this.header = '',
+    this.footer = '',
+    required this.libraries,
+    Formatter? formatOutput,
   }) : _formatOutput = formatOutput ?? DartFormatter().format;
 
   final MergingGenerator<T, dynamic> generator;
@@ -38,7 +49,7 @@ class MockMergingBuilder<T> {
     buffer.writeln();
 
     // Add footer.
-    if (footer != null) buffer.writeln(footer);
+    buffer.writeln(footer);
 
     // Format output.
     return _formatOutput(buffer.toString());
@@ -49,11 +60,86 @@ class MockMergingBuilder<T> {
   /// by iterating over each file asset.
   Stream<T> _combineStreams() async* {
     for (final library in libraries) {
-      final streamOfT = await generator.generateStream(library, null);
+      final streamOfT = generator.generateStream(library, MockBuildStep());
       // Combining all objects of type [T] into a stream.
       await for (final T t in streamOfT) {
         yield t;
       }
     }
+  }
+}
+
+class MockBuildStep extends BuildStep {
+  @override
+  Future<bool> canRead(AssetId id) {
+    // TODO: implement canRead
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Digest> digest(AssetId id) {
+    // TODO: implement digest
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<T> fetchResource<T>(Resource<T> resource) {
+    // TODO: implement fetchResource
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<AssetId> findAssets(Glob glob) {
+    // TODO: implement findAssets
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement inputId
+  AssetId get inputId => throw UnimplementedError();
+
+  @override
+  // TODO: implement inputLibrary
+  Future<LibraryElement> get inputLibrary => throw UnimplementedError();
+
+  @override
+  Future<List<int>> readAsBytes(AssetId id) {
+    // TODO: implement readAsBytes
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> readAsString(AssetId id, {Encoding encoding = utf8}) {
+    // TODO: implement readAsString
+    throw UnimplementedError();
+  }
+
+  @override
+  void reportUnusedAssets(Iterable<AssetId> ids) {
+    // TODO: implement reportUnusedAssets
+  }
+
+  @override
+  // TODO: implement resolver
+  Resolver get resolver => throw UnimplementedError();
+
+  @override
+  T trackStage<T>(String label, T Function() action,
+      {bool isExternal = false}) {
+    // TODO: implement trackStage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> writeAsBytes(AssetId id, FutureOr<List<int>> bytes) {
+    // TODO: implement writeAsBytes
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> writeAsString(AssetId id, FutureOr<String> contents,
+      {Encoding encoding = utf8}) {
+    // TODO: implement writeAsString
+    throw UnimplementedError();
   }
 }
