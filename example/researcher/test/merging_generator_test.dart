@@ -35,7 +35,6 @@ Future<void> main() async {
     libraries: [libA, libB],
     header: AddNumbersGenerator.header,
     footer: AddNumbersGenerator.footer,
-
   );
 
   final namesBuilder = MockMergingBuilder<List<String>>(
@@ -43,7 +42,6 @@ Future<void> main() async {
     libraries: [libA, libB],
     header: AddNamesGenerator.header,
     footer: AddNamesGenerator.footer,
-    
   );
 
   final numMergedContent = await numBuilder.mergedContent;
