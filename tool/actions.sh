@@ -34,7 +34,7 @@ dartfmt -w $(find bin lib test -name \*.dart 2>/dev/null)
 echo
 echo -e "${BLUE}=== Analyzing $PWD...${RESET}"
 echo
-dartanalyzer \
+dart analyze \
     --fatal-warnings \
     --fatal-infos \
     --packages="$PWD/.packages" \
@@ -44,7 +44,7 @@ dartanalyzer \
 echo
 echo -e "${CYAN}=== Testing $PWD...${RESET}"
 echo
-pub run test -r expanded
+dart test -r expanded
 
 
 # ================
@@ -56,6 +56,6 @@ directories="example/researcher_builder/ example/researcher/"
 
 for directory in $directories; do
   cd $directory
-  ./tool/travis.sh
+  ./tool/actions.sh
   cd ../..
 done
