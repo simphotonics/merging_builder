@@ -5,8 +5,6 @@
 
 name: Dart
 
-name: Manually triggered workflow
-
 on:
   push:
     branches: [ main ]
