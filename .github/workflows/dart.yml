@@ -15,7 +15,7 @@ on:
     paths:
     - '**.dart'
     - '**.yml'
-  workflow_dispatch:
+  #workflow_dispatch:
 
 jobs:
   build:
