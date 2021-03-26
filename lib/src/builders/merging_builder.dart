@@ -29,6 +29,9 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// * `formatter`: A function with signature `String Function(String input)`
   /// that is used to format the generated source code.
   /// The default formatter is: `DartFormatter().format`.
+  /// Note: The standard Dart formatter will throw an error if the generated
+  /// source code contains invalid syntax. To temporarily suppress formatting
+  /// use: `(String input) => input`.
   MergingBuilder({
     String inputFiles = 'lib/*.dart',
     this.outputFile = 'lib/merged_output.dart',

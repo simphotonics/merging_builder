@@ -13,40 +13,43 @@ import 'synthetic_builder.dart';
 
 /// Builder that uses synthetic input and
 /// creates one output file for each input file.
-///
-/// * Input files must be specified using [Glob] syntax.
-/// * The output path must be specified.
-///
-/// * The type parameter [S] represents the synthetic input used by the builder.
+/// * The type parameter `S` represents the synthetic input used by the builder.
 ///   Valid types are [LibDir] and [PackageDir], both extending [SyntheticInput].
 class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// Constructs a [StandaloneBuilder] object.
   ///
-  /// - [inputFiles] defaults to: `'lib/*.dart'`.
+  /// - [inputFiles] defaults to: `'lib/*.dart'`. Glob-style syntax supported.
   ///
-  /// - [outputFiles] defaults to: `'lib/standalone_(*).dart'`.
+  /// - [outputFiles]: Path to the output files.
+  /// The symbol `(*)` will be replaced with the corresponding input file name
+  /// (omitting the extension). Defaults to: `'lib/standalone_(*).dart'`.
   ///
-  /// - [generator] is required.
+  /// - [generator]: An instance of [Generator].
   ///
-  /// - [header] defaults to: `''`
+  /// - [header]: A String that will be inserted at the top of the
+  /// generated file below the 'DO NOT EDIT' warning message.
   ///
-  /// - [footer] defaults to : `''`
+  /// - [footer]: A String that will be inserted at the very bottom of the
+  /// generated file.
   ///
-  /// - [formatOutput] defaults to: `DartFormatter().format`.
+  /// - [formatter]: A function with signature `String Function(String input)`.
+  /// Defaults to `DartFormatter().format`.
+  /// To disable formatting one may pass a closure returning the
+  /// input: `(input) => input` as argument for `formatter`.
   StandaloneBuilder({
     String inputFiles = 'lib/*.dart',
     this.outputFiles = 'lib/standalone_(*).dart',
     required this.generator,
     String header = '',
     String footer = '',
-    Formatter? formatOutput,
+    Formatter? formatter,
     String root = '',
   })  : root = root.trim(),
         super(
             inputFiles: inputFiles,
             header: header,
             footer: footer,
-            formatter: formatOutput) {
+            formatter: formatter) {
     _resolvedOutputFiles = Lazy(_outputPaths);
   }
 
