@@ -22,3 +22,4 @@ doc/api/
 
 # Workspace settings
 *.code-workspace
+.vscode
