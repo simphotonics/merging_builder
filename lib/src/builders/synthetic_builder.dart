@@ -7,9 +7,6 @@ import 'package:glob/glob.dart';
 import 'formatter.dart';
 import 'synthetic_input.dart';
 
-/// The default formatting function which simply returns `input`.
-String defaultFormatter(String input) => input;
-
 /// Base class of a builder that uses synthetic input.
 ///
 /// For more information about synthetic input see:
@@ -26,6 +23,8 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   /// * `formatter`: A function with signature `String Function(String input)`
   /// that is used to format the generated source code.
   /// The default formatter is: `DartFormatter().format`.
+  /// To disable formatting one may pass a closure returning the
+  /// input: `(input) => input` as argument for `formatter`.
   SyntheticBuilder({
     required this.inputFiles,
     this.header = '',
@@ -54,7 +53,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   ///
   /// Is used to format the merged output.
   /// To disable formatting one may pass a closure returning the
-  /// input: `(input) => input;` as argument for `formatOutput`.
+  /// input: `(input) => input` as argument for `formatter`.
   final Formatter formatter;
 
   /// The synthetic input used by this builder.
@@ -64,7 +63,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   /// after adding the header and footer.
   ///
   /// The final output is formatted using the
-  /// function provided as constructor argument for `formatOutput`.
+  /// function provided as constructor argument for `formatter`.
   String arrangeContent(String source, {String generatedBy = ''}) {
     // Add header to buffer.
     // Expand header:
