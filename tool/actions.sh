@@ -12,6 +12,20 @@ RESET='\033[0m'
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# =====================
+# Running local scripts
+# =====================
+
+# Directories to be processed
+directories="example/researcher_builder/ example/researcher/"
+
+for directory in $directories; do
+  cd $directory
+  ./tool/actions.sh
+  cd ../..
+done
+
+
 # Resolving dependencies
 echo
 echo -e "${BLUE}=== Resolving dependencies $PWD...${RESET}"
@@ -36,26 +50,13 @@ echo -e "${BLUE}=== Analyzing $PWD...${RESET}"
 echo
 dart analyze \
     --fatal-warnings \
-    --fatal-infos \
-    --packages="$PWD/.packages" \
-    $(find bin lib test -name \*.dart 2>/dev/null)
+    --fatal-infos
+    # \
+    # --packages="$PWD/.packages" \
+    # $(find bin lib test -name \*.dart 2>/dev/null)
 
 # Running tests
 echo
 echo -e "${CYAN}=== Testing $PWD...${RESET}"
 echo
 dart test -r expanded
-
-
-# ================
-# Running examples
-# ================
-
-# Directories to be processed
-directories="example/researcher_builder/ example/researcher/"
-
-for directory in $directories; do
-  cd $directory
-  ./tool/actions.sh
-  cd ../..
-done
