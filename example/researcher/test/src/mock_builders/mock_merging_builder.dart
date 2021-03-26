@@ -22,13 +22,13 @@ class MockMergingBuilder<T> {
     this.header = '',
     this.footer = '',
     required this.libraries,
-    Formatter? formatOutput,
-  }) : _formatOutput = formatOutput ?? DartFormatter().format;
+    Formatter? formatter,
+  }) : _formatter = formatter ?? DartFormatter().format;
 
   final MergingGenerator<T, dynamic> generator;
   final String header;
   final String footer;
-  final Formatter _formatOutput;
+  final Formatter _formatter;
   final List<LibraryReader> libraries;
 
   /// Returns the merged [Future<String>] output. Calls the
@@ -52,7 +52,7 @@ class MockMergingBuilder<T> {
     buffer.writeln(footer);
 
     // Format output.
-    return _formatOutput(buffer.toString());
+    return _formatter(buffer.toString());
   }
 
   /// Generates a stream of objects of type [T]. Combines the streams
