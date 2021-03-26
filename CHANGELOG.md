@@ -1,3 +1,7 @@
+## 0.2.1
+
+Expanded Dart docs.
+
 ## 0.2.0
 
 Migrated to null-safety.
