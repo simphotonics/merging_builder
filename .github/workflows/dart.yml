@@ -33,11 +33,11 @@ jobs:
         run: dart pub get
 
       - name: Install deps of researcher
-        working_directory: example/researcher
+        working-directory: example/researcher
         run: dart pub get
 
       - name: Install deps of researcher_builder
-        working_directory: example/researcher_builder
+        working-directory: example/researcher_builder
         run: dart pub get
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
