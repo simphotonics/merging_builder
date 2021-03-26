@@ -5,6 +5,8 @@
 
 name: Dart
 
+name: Manually triggered workflow
+
 on:
   push:
     branches: [ main ]
@@ -15,6 +17,7 @@ on:
     paths:
     - '**.dart'
     - '**.yml'
+  workflow_dispatch:
 
 jobs:
   build:
