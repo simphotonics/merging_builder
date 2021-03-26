@@ -1,7 +1,7 @@
 
 # Merging Builder
-[![Build Status](https://travis-ci.com/simphotonics/merging_builder.svg?branch=master)](https://travis-ci.com/simphotonics/merging_builder)
 
+[![Dart](https://github.com/simphotonics/merging_builder/actions/workflows/dart.yml/badge.svg)](https://github.com/simphotonics/merging_builder/actions/workflows/dart.yml)
 
 ## Introduction
 
@@ -106,7 +106,7 @@ In the [example] provided with this library, the package defining a new builder 
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
    * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
 
-   
+
 
     ```Dart
      import 'package:build/build.dart';
