@@ -1,14 +1,15 @@
 name: researcher
+
 description: Example demonstrating how to use the library merging_builder.
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
-dependencies: null
-
-dev_dependencies:
+dependencies:
   researcher_builder:
     path: ../researcher_builder
+
+dev_dependencies:
   build_runner: ^1.12.2
   build_test: ^2.0.0
   source_gen: ^1.0.0
