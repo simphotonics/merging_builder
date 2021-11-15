@@ -1,3 +1,9 @@
+## 0.2.3
+
+* Updated dependencies.
+* Removed `test` directory from `example/researcher`.
+  Reason: `BuildStep` is now a sealed class and may not be extended or implemented.
+
 ## 0.2.2
 
 Migrated CI to github.
