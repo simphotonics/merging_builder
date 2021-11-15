@@ -32,17 +32,17 @@ echo -e "${BLUE}=== Resolving dependencies $PWD...${RESET}"
 echo
 
 # Make sure .dart_tool/package_config.json exists.
-pub get
+dart pub get
 
 # Upgrade packages.
-pub upgrade
+dart pub upgrade
 
 echo
 echo -e "${PURPLE}=== Checking Source Code Formatting${RESET} $PWD..."
 echo
 # Overwrite files with formatted content: -w
 # Dry run: -n
-dartfmt -w $(find bin lib test -name \*.dart 2>/dev/null)
+dart format bin lib test
 
 # Analyze dart files
 echo
