@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart' show BuildStep;
 import 'package:researcher/researcher.dart' show AddNames;
 import 'package:source_gen/source_gen.dart';
 

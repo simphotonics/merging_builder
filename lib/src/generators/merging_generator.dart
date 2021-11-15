@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:analyzer/dart/element/element.dart' show Element;
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart' show BuildStep;
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
