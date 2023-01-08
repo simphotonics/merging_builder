@@ -10,12 +10,12 @@ void main(List<String> args) {
   final map = <String, dynamic>{};
   final options = BuilderOptions(map);
 
-  final _addNamesBuilder = addNamesBuilder(options);
-  final _assistantBuilder = assistantBuilder(options);
+  final addNamesBuilderVar = addNamesBuilder(options);
+  final assistantBuilderVar = assistantBuilder(options);
 
   print('AddNamesBuilder: buildExtensions');
-  print(_addNamesBuilder.buildExtensions);
+  print(addNamesBuilderVar.buildExtensions);
   print('');
   print('AssistantBuilder: buildExtensions');
-  print(_assistantBuilder.buildExtensions);
+  print(assistantBuilderVar.buildExtensions);
 }
