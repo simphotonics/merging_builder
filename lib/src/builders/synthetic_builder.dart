@@ -67,9 +67,8 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   String arrangeContent(String source, {String generatedBy = ''}) {
     // Add header to buffer.
     // Expand header:
-    final _header =
-        '// GENERATED CODE. DO NOT MODIFY. ' + generatedBy + '\n\n' + header;
-    final buffer = StringBuffer(_header);
+    final buffer = StringBuffer(
+        '// GENERATED CODE. DO NOT MODIFY. $generatedBy \n\n $header');
     buffer.writeln();
 
     source.trim();
@@ -124,9 +123,8 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
       // Read library.
       final library = await buildStep.resolver.libraryFor(assetId);
       // Get dependencies
-      for (final import in library.imports) {
-        if (import.uri == null) continue;
-        final uri = Uri.parse(import.uri!);
+      for (final import in library.libraryImports) {
+        final uri = Uri.parse(import.uri.toString());
         // Skip if uri scheme is not "package" or "asset".
         if (uri.scheme == 'package' ||
             uri.scheme == 'asset' ||
