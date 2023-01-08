@@ -6,18 +6,18 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  analyzer: ^2.7.0
-  build: ^2.1.1
-  build_config: ^1.0.0
+  analyzer: ^5.4.0
+  build: ^2.3.1
+  build_config: ^1.1.1
   merging_builder:
     path: ../../
   quote_buffer: ^0.2.3
   researcher:
     path: ../researcher
-  source_gen: ^1.1.1
+  source_gen: ^1.2.6
 
 dev_dependencies:
-  lints: ^1.0.1
+  lints: ^2.0.1
 
 dependency_overrides: null
 
