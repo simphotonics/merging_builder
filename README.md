@@ -5,14 +5,29 @@
 
 ## Introduction
 
-Source code generation has become an integral software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
+Source code generation has become an important software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
+
+The premise of *source code generation* is that we can specify
+(hopefully few) details and flesh out the rest of the classes, and methods during the build process.
+
+The build process consists of scannig the appropriate files, extracting the required information,
+generating the source code, and writing the source code to certain files. The build process
+also entails keeping track of files changes, delete conflicting files, reporting issues and progress, etc.
+
+Source code generation using Dart relies heavily on *constants* known at compile time.
+Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
+class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
+Compile-time constant expressions are represented by a [`DartObject`][DartObject] and can be accessed by using [`computeConstantValue()`][computeConstantValue()] a method available for elements representing a variable.
+
+In practice, we mark constant constant classes with annotations and instruct the builder to processes only
+the annotated objects.
+
 
 The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
 
-* [`MergingBuilder`][class-merging-builder] reads **several input files** and writes merged output to **one output file**. The builder provides the option to sort the input files in reverse topological order.
+* [`MergingBuilder`][class-merging-builder] reads **several input files** and writes merged output to **one output file**. The builder provides the option to sort the processing order of the input files in reverse topological order.
 
-* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location. In this context, **standalone** means the output files may be written to a **custom folder** and not only the **extension** but the
-**name** of the output file can be configured.
+* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location. In this context, **standalone** means the output files may be written to a **custom folder** and not only the **extension** but the **name** of the output file can be configured (as opposed to using part files).
 
 
 ## Usage
@@ -29,54 +44,54 @@ In the [example] provided with this library, the package defining a new builder 
    <details> <summary> Show details. </summary>
 
     ```Dart
-    import 'dart:async';
-    import 'package:analyzer/dart/element/element.dart';
-    import 'package:build/src/builder/build_step.dart';
-    import 'package:merging_builder/merging_builder.dart';
-    import 'package:merging_builder/src/annotations/add_names.dart';
-    import 'package:source_gen/source_gen.dart';
-    import 'package:quote_buffer/quote_buffer.dart';
 
-    /// Reads numbers from annotated classes and emits the sum.
+    import 'dart:async';
+
+    import 'package:analyzer/dart/element/element.dart';
+    import 'package:build/build.dart' show BuildStep;
+    import 'package:merging_builder/merging_builder.dart';
+    import 'package:quote_buffer/quote_buffer.dart';
+    import 'package:researcher/researcher.dart' show AddNames;
+    import 'package:source_gen/source_gen.dart';
+    
+    /// Reads a field element of type [List<String] and generates the merged content.
     class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
       /// Portion of source code included at the top of the generated file.
       /// Should be specified as header when constructing the merging builder.
       static String get header {
         return '/// Added names.';
       }
-
+    
       /// Portion of source code included at the very bottom of the generated file.
       /// Should be specified as [footer] when constructing the merging builder.
       static String get footer {
         return '/// This is the footer.';
       }
-
+    
       @override
       List<String> generateStreamItemForAnnotatedElement(
         Element element,
         ConstantReader annotation,
         BuildStep buildStep,
       ) {
-        final List<String> result = [];
+        final result = <String>[];
         if (element is ClassElement) {
           final nameObjects =
               element.getField('names')?.computeConstantValue()?.toListValue();
-          if (nameObjects != null) {
-            for (final nameObj in nameObjects) {
-              result.add(nameObj.toStringValue());
-            }
-            return result;
+          for (final nameObj in nameObjects ?? []) {
+            result.add(nameObj.toStringValue());
           }
+          return result;
         }
-        return null;
+        return <String>['Could not read name'];
       }
-
-      /// Returns merged content.
+    
+      /// Returns the merged content.
       @override
       FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
-        final b = QuoteBuffer();
-        int i = 0;
-        final List<List<String>> allNames = [];
+        final b = StringBuffer();
+        var i = 0;
+        final allNames = <List<String>>[];
         // Iterate over stream:
         await for (final names in stream) {
           b.write('final name$i = [');
@@ -85,7 +100,7 @@ In the [example] provided with this library, the package defining a new builder 
           ++i;
           allNames.add(names);
         }
-
+    
         b.writeln('');
         b.writeln('final List<List<String>> names = [');
         for (var names in allNames) {
@@ -105,8 +120,6 @@ In the [example] provided with this library, the package defining a new builder 
    * The generator `AddNamesGenerator` shown below extends `MergingGenerator<List<String>, AddNames>` (see step 2).
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
    * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
-
-
 
     ```Dart
      import 'package:build/build.dart';
@@ -214,7 +227,7 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
         Example demonstrating how to use the library merging_builder.
 
       environment:
-        sdk: '>=2.8.1 <3.0.0'
+        sdk: '>=2.12.0 <3.0.0'
 
       dev_dependencies:
         build_runner: ^1.10.0
@@ -224,8 +237,66 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
 
 7. Initiate the build process by using the command:
    ```console
-   # pub run build_runner build --delete-conflicting-outputs --verbose
+   # dart run build_runner build --delete-conflicting-outputs --verbose
+   [INFO] Entrypoint:Generating build script...
+   [INFO] Entrypoint:Generating build script completed, took 802ms
+
+   [INFO] BuildDefinition:Initializing inputs
+   [INFO] BuildDefinition:Reading cached asset graph...
+   [INFO] BuildDefinition:Reading cached asset graph completed, took 99ms
+
+   [INFO] BuildDefinition:Checking for updates since last build...
+   [INFO] BuildDefinition:Checking for updates since last build completed, took 772ms
+
+   [INFO] Build:Running build...
+   [FINE] researcher_builder:add_names_builder on lib/$lib$:Running AddNamesGenerator on: lib/input/researcher_b.dart.
+   [FINE] researcher_builder:add_names_builder on lib/$lib$:Running AddNamesGenerator on: lib/input/researcher_a.dart.
+   [FINE] researcher_builder:assistant_builder on lib/$lib$:Running AssistantGenerator on: lib/input/researcher_b.dart.
+   [FINE] researcher_builder:assistant_builder on lib/$lib$:Running AssistantGenerator on: lib/input/researcher_a.dart.
+   [INFO] Build:Running build completed, took 886ms
+
+   [INFO] Build:Caching finalized dependency graph...
+   [INFO] Build:Caching finalized dependency graph completed, took 70ms
+
+   [INFO] Build:Succeeded after 973ms with 3 outputs (2 actions)
    ```
+
+To view the content of the generated files please click below:
+<details> <summary> lib/output/assistant_researcher_a.dart </summary>
+
+ ```Dart
+ // GENERATED CODE. DO NOT MODIFY. Generated by AssistantGenerator.
+ final String assistants = 'Thomas, Mayor';
+ ```
+
+</details>
+
+<details> <summary> lib/output/assistant_researcher_b.dart </summary>
+
+ ```Dart
+ // GENERATED CODE. DO NOT MODIFY. Generated by AssistantGenerator.
+ final String assistants = 'Philip, Martens';
+ ```
+
+</details>
+<details> <summary> lib/output/researchers.dart </summary>
+
+ ```Dart
+ // GENERATED CODE. DO NOT MODIFY. Generated by AddNamesGenerator.
+
+ // Header specified in build.yaml.
+ final name0 = ['Philip', 'Martens'];
+ final name1 = ['Thomas', 'Mayor'];
+
+ final List<List<String>> names = [
+     ['Philip', 'Martens'],
+     ['Thomas', 'Mayor'],
+ ];
+
+ // Footer specified in build.yaml.
+ ```
+
+</details>
 
 ## Implementation Details
 
@@ -284,11 +355,19 @@ Please file feature requests and bugs at the [issue tracker].
 
 [builder.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
 
+[Elements]: https://pub.dev/documentation/analyzer/latest/dart_element_element/dart_element_element-library.html
+
+[computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
+
+[ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
+
 [class-merging-builder]: https://github.com/simphotonics/merging_builder#class-merging-builder
 
 [class-standalone-builder]: https://github.com/simphotonics/merging_builder#class-standalone-builder
 
 [example]: https://github.com/simphotonics/merging_builder/tree/master/example
+
+[DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
 [Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
 
