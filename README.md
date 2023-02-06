@@ -36,7 +36,7 @@ Following the example of [`source_gen`][source_gen], it is common practice to se
 
 In the [example] provided with this library, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
 
-1. Include [`merging_builder`][merging_builder] and [`build`][build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. (In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].)
+1. Include [`merging_builder`][merging_builder], [`build`][build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].
 
 2. In the package **defining** the custom builder, create a custom generator that extends [`MergingGenerator`][MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
 
@@ -52,8 +52,8 @@ In the [example] provided with this library, the package defining a new builder 
     import 'package:merging_builder/merging_builder.dart';
     import 'package:quote_buffer/quote_buffer.dart';
     import 'package:researcher/researcher.dart' show AddNames;
-    import 'package:source_gen/source_gen.dart';
-    
+    import 'package:source_gen/source_gen.dart' show ConstantReader;
+
     /// Reads a field element of type [List<String] and generates the merged content.
     class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
       /// Portion of source code included at the top of the generated file.
@@ -61,13 +61,13 @@ In the [example] provided with this library, the package defining a new builder 
       static String get header {
         return '/// Added names.';
       }
-    
+
       /// Portion of source code included at the very bottom of the generated file.
       /// Should be specified as [footer] when constructing the merging builder.
       static String get footer {
         return '/// This is the footer.';
       }
-    
+
       @override
       List<String> generateStreamItemForAnnotatedElement(
         Element element,
@@ -85,7 +85,7 @@ In the [example] provided with this library, the package defining a new builder 
         }
         return <String>['Could not read name'];
       }
-    
+
       /// Returns the merged content.
       @override
       FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
@@ -100,7 +100,7 @@ In the [example] provided with this library, the package defining a new builder 
           ++i;
           allNames.add(names);
         }
-    
+
         b.writeln('');
         b.writeln('final List<List<String>> names = [');
         for (var names in allNames) {

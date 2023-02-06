@@ -3,7 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart' show BuildStep;
 import 'package:merging_builder/merging_builder.dart';
 import 'package:researcher/researcher.dart' show AddNumbers;
-import 'package:source_gen/source_gen.dart';
+import 'package:source_gen/source_gen.dart' show ConstantReader;
 
 /// Reads numbers from annotated classes and emits the sum.
 class AddNumbersGenerator extends MergingGenerator<num, AddNumbers> {

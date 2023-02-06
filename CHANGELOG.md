@@ -1,3 +1,7 @@
+## 0.2.5
+
+* Updated examples and docs.
+
 ## 0.2.4
 
 * Updated dependencies.

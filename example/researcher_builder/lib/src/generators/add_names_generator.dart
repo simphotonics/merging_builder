@@ -5,7 +5,7 @@ import 'package:build/build.dart' show BuildStep;
 import 'package:merging_builder/merging_builder.dart';
 import 'package:quote_buffer/quote_buffer.dart';
 import 'package:researcher/researcher.dart' show AddNames;
-import 'package:source_gen/source_gen.dart';
+import 'package:source_gen/source_gen.dart' show ConstantReader;
 
 /// Reads a field element of type [List<String] and generates the merged content.
 class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {

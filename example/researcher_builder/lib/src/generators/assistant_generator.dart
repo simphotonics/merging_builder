@@ -1,7 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart' show BuildStep;
 import 'package:researcher/researcher.dart' show AddNames;
-import 'package:source_gen/source_gen.dart';
+import 'package:source_gen/source_gen.dart'
+    show ConstantReader, GeneratorForAnnotation;
 
 /// Generates a standalone file.
 class AssistantGenerator extends GeneratorForAnnotation<AddNames> {
