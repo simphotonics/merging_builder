@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart' show BuildStep;
 import 'package:merging_builder/merging_builder.dart';
