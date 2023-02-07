@@ -17,13 +17,13 @@ set -e
 # =====================
 
 # Directories to be processed
-directories="example/researcher_builder/ example/researcher/"
+# directories="example/researcher_builder/ example/researcher/"
 
-for directory in $directories; do
-  cd $directory
-  ./tool/actions.sh
-  cd ../..
-done
+# for directory in $directories; do
+#   cd $directory
+#   ./tool/actions.sh
+#   cd ../..
+# done
 
 
 # Resolving dependencies
