@@ -51,8 +51,11 @@ In the [example] provided with this library, the package defining a new builder 
     import 'package:build/build.dart' show BuildStep;
     import 'package:merging_builder/merging_builder.dart';
     import 'package:quote_buffer/quote_buffer.dart';
-    import 'package:researcher/researcher.dart' show AddNames;
+
     import 'package:source_gen/source_gen.dart' show ConstantReader;
+
+    import '../annotations/add_names.dart';
+
 
     /// Reads a field element of type [List<String] and generates the merged content.
     class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
@@ -227,7 +230,7 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
         Example demonstrating how to use the library merging_builder.
 
       environment:
-        sdk: '>=2.12.0 <3.0.0'
+        sdk: '>=2.17.0 <3.0.0'
 
       dev_dependencies:
         build_runner: ^1.10.0
@@ -353,7 +356,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [build_runner]: https://pub.dev/packages/build_runner
 
-[builder.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher_builder/lib/builder.dart
+[builder.dart]: https://github.com/simphotonics/merging_builder_example/blob/researcher_builder/lib/builder.dart
 
 [Elements]: https://pub.dev/documentation/analyzer/latest/dart_element_element/dart_element_element-library.html
 
@@ -365,7 +368,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [class-standalone-builder]: https://github.com/simphotonics/merging_builder#class-standalone-builder
 
-[example]: https://github.com/simphotonics/merging_builder/tree/master/example
+[example]: https://github.com/simphotonics/merging_builder_example
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
@@ -385,7 +388,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [PackageDir]: https://pub.dev/documentation/merging_builder/latest/merging_builder/PackageDir-class.html
 
-[researchers.dart]: https://github.com/simphotonics/merging_builder/blob/master/example/researcher/lib/researchers.dart
+[researchers.dart]: https://github.com/simphotonics/merging_builder_example/blob/main/researcher/lib/output/researchers.dart
 
 [source_gen]: https://pub.dev/packages/source_gen
 

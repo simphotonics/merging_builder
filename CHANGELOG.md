@@ -1,6 +1,7 @@
 ## 0.2.5
 
 * Updated examples and docs.
+* Moved example folder to repository: [merging_builder_example](https://github.com/simphotonics/merging_builder_example)
 
 ## 0.2.4
 
