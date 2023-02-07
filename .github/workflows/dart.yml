@@ -14,13 +14,16 @@ on:
     branches: [ main ]
     paths:
     - '**.dart'
-  
+
+workflow_dispatch:
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Note: This workflow uses the latest stable version of the Dart SDK.
       # You can specify other versions if desired, see documentation here:
@@ -30,13 +33,13 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      - name: Install deps of researcher
-        working-directory: example/researcher
-        run: dart pub get
+      # - name: Install deps of researcher
+      #   working-directory: example/researcher
+      #   run: dart pub get
 
-      - name: Install deps of researcher_builder
-        working-directory: example/researcher_builder
-        run: dart pub get
+      # - name: Install deps of researcher_builder
+      #   working-directory: example/researcher_builder
+      #   run: dart pub get
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
