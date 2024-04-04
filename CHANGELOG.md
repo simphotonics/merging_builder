@@ -1,6 +1,10 @@
+## 0.2.7
+* Updated dependencies.
+* Added topics to `pubspec.yaml`.
+
 ## 0.2.6
 * Updated dependencies.
-* Removed dependency on package `meta`.
+* Removed explicit dependency on package `meta`.
 
 ## 0.2.5
 
