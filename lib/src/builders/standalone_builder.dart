@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:build/build.dart';
 import 'package:exception_templates/exception_templates.dart';
 import 'package:file/local.dart';
@@ -7,9 +8,8 @@ import 'package:lazy_memo/lazy_memo.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart' show Generator, LibraryReader;
 
-import 'formatter.dart';
-import 'synthetic_input.dart';
 import 'synthetic_builder.dart';
+import 'synthetic_input.dart';
 
 /// Builder that uses synthetic input and
 /// creates one output file for each input file.
@@ -37,19 +37,14 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// To disable formatting one may pass a closure returning the
   /// input: `(input) => input` as argument for `formatter`.
   StandaloneBuilder({
-    String inputFiles = 'lib/*.dart',
+    super.inputFiles = 'lib/*.dart',
     this.outputFiles = 'lib/standalone_(*).dart',
     required this.generator,
-    String header = '',
-    String footer = '',
-    Formatter? formatter,
+    super.header,
+    super.footer,
+    super.formatter,
     String root = '',
-  })  : root = root.trim(),
-        super(
-            inputFiles: inputFiles,
-            header: header,
-            footer: footer,
-            formatter: formatter) {
+  }) : root = root.trim() {
     _resolvedOutputFiles = Lazy(_outputPaths);
   }
 

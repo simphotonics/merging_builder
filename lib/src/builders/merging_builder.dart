@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:build/build.dart';
 import 'package:exception_templates/exception_templates.dart';
 import 'package:glob/glob.dart';
@@ -6,7 +7,6 @@ import 'package:path/path.dart' as path show equals;
 import 'package:source_gen/source_gen.dart' show LibraryReader;
 
 import '../generators/merging_generator.dart';
-import 'formatter.dart';
 import 'synthetic_builder.dart';
 import 'synthetic_input.dart';
 
@@ -33,19 +33,14 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// source code contains invalid syntax. To temporarily suppress formatting
   /// use: `(String input) => input`.
   MergingBuilder({
-    String inputFiles = 'lib/*.dart',
+    super.inputFiles = 'lib/*.dart',
     this.outputFile = 'lib/merged_output.dart',
     required this.generator,
-    String header = '',
-    String footer = '',
+    super.header,
+    super.footer,
     this.sortAssets = false,
-    Formatter? formatter,
-  }) : super(
-          inputFiles: inputFiles,
-          header: header,
-          footer: footer,
-          formatter: formatter,
-        );
+    super.formatter,
+  });
 
   /// Path to output file relative to the package root directory.
   /// Example: `lib/merged_output.dart`

@@ -1,10 +1,9 @@
 import 'package:exception_templates/exception_templates.dart';
-import 'package:meta/meta.dart';
 
 /// Base class representing synthetic builder input.
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
-abstract class SyntheticInput {
+sealed class SyntheticInput {
   const SyntheticInput._(this.value);
 
   /// String value.
@@ -52,9 +51,8 @@ abstract class SyntheticInput {
 /// Synthetic input representing files under the `lib` directory.
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
-@sealed
-class LibDir extends SyntheticInput {
-  const LibDir._(String value) : super._(value);
+final class LibDir extends SyntheticInput {
+  const LibDir._(super.value) : super._();
 
   static LibDir? _instance;
 
@@ -69,9 +67,8 @@ class LibDir extends SyntheticInput {
 /// Synthetic input representing files under the `root` directory.
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
-@sealed
-class PackageDir extends SyntheticInput {
-  const PackageDir._(String value) : super._(value);
+final class PackageDir extends SyntheticInput {
+  const PackageDir._(super.value) : super._();
 
   static PackageDir? _instance;
 

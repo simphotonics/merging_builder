@@ -1,8 +1,8 @@
-import 'package:build/src/builder/build_step.dart';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:exception_templates/exception_templates.dart';
 import 'dart:async';
 
+import 'package:analyzer/dart/element/element.dart';
+import 'package:build/src/builder/build_step.dart';
+import 'package:exception_templates/exception_templates.dart';
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/src/constants/reader.dart';
 import 'package:test/test.dart';

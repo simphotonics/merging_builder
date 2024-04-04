@@ -1,6 +1,3 @@
-/// Library providing the builders [MergingBuilder] and [StandaloneBuilder].
-/// * Note: The builders use synthetic input.
-
 export 'src/builders/merging_builder.dart';
 export 'src/generators/merging_generator.dart';
 export 'src/builders/standalone_builder.dart';
