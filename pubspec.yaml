@@ -13,23 +13,22 @@ topics:
   - build-runner
   - source-code-generator
 
-
-
 environment:
-  sdk: '^3.0.0'
+  sdk: '^3.6.0'
 
 dependencies:
-  analyzer: ^6.4.1
+  analyzer: ^7.0.0
   build: ^2.4.1
-  build_runner: ^2.4.9
-  dart_style: ^2.3.6
+  build_runner: ^2.4.14
+  dart_style: ^3.0.1
   directed_graph: ^0.4.3
   exception_templates: ^0.3.0
   file: ^7.0.0
   glob: ^2.1.2
   lazy_memo: ^0.2.3
   path: ^1.9.0
-  source_gen: ^1.5.0
+  source_gen: ^2.0.0
+
 #dependency_overrides:
 # source_gen:
 #   git:
