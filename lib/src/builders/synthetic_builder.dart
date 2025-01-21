@@ -30,7 +30,9 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
     this.header = '',
     this.footer = '',
     Formatter? formatter,
-  })  : formatter = formatter ?? DartFormatter().format,
+  })  : formatter = formatter ??
+            DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+                .format,
         syntheticInput = SyntheticInput.instance<S>();
 
   /// Input files. Specify the complete path relative to the
@@ -123,8 +125,8 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
       // Read library.
       final library = await buildStep.resolver.libraryFor(assetId);
       // Get dependencies
-      for (final import in library.libraryImports) {
-        final uri = Uri.parse(import.uri.toString());
+      for (final import in library.importedLibraries) {
+        final uri = Uri.parse(import.source.uri.toString());
         // Skip if uri scheme is not "package" or "asset".
         if (uri.scheme == 'package' ||
             uri.scheme == 'asset' ||
