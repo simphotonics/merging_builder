@@ -1,3 +1,8 @@
+
+## 0.2.8
+* Updated dependencies
+* Requires SDK ^0.3.6, and analyzer ^7.0.0.
+
 ## 0.2.7
 * Updated dependencies.
 * Added topics to `pubspec.yaml`.
