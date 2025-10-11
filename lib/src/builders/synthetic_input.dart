@@ -39,11 +39,13 @@ sealed class SyntheticInput {
   static void validatePath<T extends SyntheticInput>(String path) {
     if (!SyntheticInput.isValidPath<T>(path)) {
       throw ErrorOf<SyntheticInput>(
-          message: 'Invalid file path found.',
-          expectedState: 'A path starting with \'lib\'.'
-              'To access files outside \'lib\' change the builder '
-              'type parameter to [PackageDir].',
-          invalidState: 'The actual path is: $path.');
+        message: 'Invalid file path found.',
+        expectedState:
+            'A path starting with \'lib\'.'
+            'To access files outside \'lib\' change the builder '
+            'type parameter to [PackageDir].',
+        invalidState: 'The actual path is: $path.',
+      );
     }
   }
 }

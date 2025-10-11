@@ -16,10 +16,7 @@ abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
 
   /// Generates a stream of objects of type [T]. Each value of [T] is
   /// calculated by calling [generateStreamItemForAnnotatedElement].
-  Stream<T> generateStream(
-    LibraryReader library,
-    BuildStep buildStep,
-  ) async* {
+  Stream<T> generateStream(LibraryReader library, BuildStep buildStep) async* {
     for (final annotatedElement in library.annotatedWith(typeChecker)) {
       yield generateStreamItemForAnnotatedElement(
         annotatedElement.element,

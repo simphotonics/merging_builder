@@ -60,8 +60,8 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
 
   @override
   Map<String, List<String>> get buildExtensions => {
-        syntheticInput.value: [outputFile]
-      };
+    syntheticInput.value: [outputFile],
+  };
 
   /// Writes the merged content to the stand-alone file
   /// specified by [outputFile].
@@ -79,18 +79,17 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
     for (final libraryAssetId in libraryAssetIds) {
       if (path.equals(outputFile, libraryAssetId.path)) {
         throw ErrorOf<MergingBuilder>(
-            message: 'Output file clashes with input file!',
-            expectedState: 'Output files must not overwrite input files. '
-                'Check the [MergingBuilder] constructor argument [outputFile].',
-            invalidState: 'Output: $outputFile is also an input file.');
+          message: 'Output file clashes with input file!',
+          expectedState:
+              'Output files must not overwrite input files. '
+              'Check the [MergingBuilder] constructor argument [outputFile].',
+          invalidState: 'Output: $outputFile is also an input file.',
+        );
       }
     }
 
     await buildStep.writeAsString(
-      AssetId(
-        buildStep.inputId.package,
-        outputFile,
-      ),
+      AssetId(buildStep.inputId.package, outputFile),
       arrangeContent(
         await generator.generateMergedContent(
           _combineStreams(buildStep, libraryAssetIds),
