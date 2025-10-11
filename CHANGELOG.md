@@ -1,4 +1,10 @@
 
+## 0.3.0
+* Updated dependencies.
+* Requires SDK ^0.3.9 and analyzer ^8.2.0
+* Fixed bug in SyntheticBuilder related to the sorting process order of
+  dependent input files.
+
 ## 0.2.8
 * Updated dependencies
 * Requires SDK ^0.3.6, and analyzer ^7.0.0.

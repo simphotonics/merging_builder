@@ -5,29 +5,43 @@
 
 ## Introduction
 
-Source code generation has become an important software development tool when building and maintaining a large number of data models, data access object, widgets, etc.
+Source code generation has become an important software development tool
+when building and maintaining a large number of data models,
+data access object, widgets, etc.
 
 The premise of *source code generation* is that we can specify
-(hopefully few) details and flesh out the rest of the classes, and methods during the build process.
+(hopefully few) details and flesh out the rest of the classes,
+and methods during the build process.
 
-The build process consists of scannig the appropriate files, extracting the required information,
-generating the source code, and writing the source code to certain files. The build process
-also entails keeping track of files changes, delete conflicting files, reporting issues and progress, etc.
+The build process consists of scannig the appropriate files,
+extracting the required information,
+generating the source code, and writing the source code to certain files.
+The build process
+also entails keeping track of files changes,
+delete conflicting files, reporting issues and progress.
 
 Source code generation using Dart relies heavily on *constants* known at compile time.
 Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
 class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
-Compile-time constant expressions are represented by a [`DartObject`][DartObject] and can be accessed by using [`computeConstantValue()`][computeConstantValue()] a method available for elements representing a variable.
+Compile-time constant expressions are represented by a [`DartObject`][DartObject]
+and can be accessed by using [`computeConstantValue()`][computeConstantValue()] a method available for elements representing a variable.
 
-In practice, we mark constant constant classes with annotations and instruct the builder to processes only
-the annotated objects.
+In practice, we mark constant constant classes with annotations and instruct
+the builder to processes only the annotated objects.
 
 
 The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
 
-* [`MergingBuilder`][class-merging-builder] reads **several input files** and writes merged output to **one output file**. The builder provides the option to sort the processing order of the input files in reverse topological order.
+* [`MergingBuilder`][class-merging-builder] reads **several input files** and writes
+merged output to **one output file**. The builder provides the option to
+sort the processing order of the input files in reverse topological order.
+(In the file `build.yaml`, under builder `options` set: `sort_assets: true`).
 
-* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location. In this context, **standalone** means the output files may be written to a **custom folder** and not only the **extension** but the **name** of the output file can be configured (as opposed to using part files).
+* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and
+writes standalone files to a custom location. In this context, **standalone**
+means the output files may be written to a **custom folder** and
+not only the **extension** but the **name** of the output file can
+be configured (as opposed to using part files).
 
 
 ## Usage

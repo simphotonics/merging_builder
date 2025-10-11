@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:directed_graph/directed_graph.dart';
@@ -101,6 +103,49 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
     return result;
   }
 
+  /// Recursively adds an [AssetId] representing a library to a graph.
+  /// If the library imports other
+  /// libraries then the respective asset ids will be added as graph edges.
+  ///
+  /// ---
+  /// Note: The graph is acyclic only if no library imports itself (indirectly).
+  Future<void> _addAssetVertex({
+    required DirectedGraph<AssetId> assetGraph,
+    required AssetId assetId,
+    required Set<AssetId> scannedAssetIds,
+    required BuildStep buildStep,
+  }) async {
+    scannedAssetIds.add(assetId);
+    final library = await buildStep.resolver.libraryFor(assetId);
+    for (final fragment in library.fragments) {
+      for (final importedLibrary in fragment.importedLibraries) {
+        final uri = importedLibrary.uri;
+        switch (uri.scheme) {
+          case 'package' || 'asset':
+            final importedAssetId = AssetId.resolve(uri, from: assetId);
+            assetGraph.addEdges(assetId, {importedAssetId});
+            // Recursive call. Check if assetId exists!
+            if (!scannedAssetIds.contains(importedAssetId)) {
+              // log.fine('recursive call: $importedAssetId');
+              await _addAssetVertex(
+                assetGraph: assetGraph,
+                assetId: importedAssetId,
+                buildStep: buildStep,
+                scannedAssetIds: scannedAssetIds,
+              );
+            }
+            break;
+          default:
+          // log.finer(
+          //   'Info: In \'SyntheticBuilder\' could not resolve '
+          //   'library ${importedLibrary.displayName} '
+          //   'with uri.scheme: ${uri.scheme}.',
+          // );
+        }
+      }
+    }
+  }
+
   /// Returns an ordered set of library asset ids ordered in reverse topological
   /// dependency order.
   /// * If a file B includes a file A, then A will be appear
@@ -109,64 +154,94 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   Future<Set<AssetId>> orderedLibraryAssetIds(BuildStep buildStep) async {
     final assetGraph = DirectedGraph<AssetId>(
       {},
-      comparator: ((v1, v2) => -v1.compareTo(v2)),
+      // Alphabetic order
+      comparator: ((v1, v2) => v1.compareTo(v2)),
     );
 
-    // An assetId map of all input libraries with the uri as key.
-    final assetMap = <Uri, AssetId>{};
+    final scannedAssetIds = <AssetId>{};
+
+    /// The assetIds representing the libraries that will be processed by the
+    /// builder.
+    final assetIds = <AssetId>{};
 
     // Access libraries
-    await for (final input in buildStep.findAssets(Glob(inputFiles))) {
+    await for (final assetId in buildStep.findAssets(Glob(inputFiles))) {
       // Check if input file is a library.
-      if (await buildStep.resolver.isLibrary(input)) {
-        assetMap[input.uri] = input;
-        assetGraph.addEdges(assetMap[input.uri]!, {});
+      if (await buildStep.resolver.isLibrary(assetId)) {
+        await _addAssetVertex(
+          assetGraph: assetGraph,
+          assetId: assetId,
+          buildStep: buildStep,
+          scannedAssetIds: scannedAssetIds,
+        );
+        assetIds.add(assetId);
       }
     }
 
-    for (final assetId in assetGraph) {
-      final importedAssetIds = <AssetId>{};
+    if (assetGraph.isAcyclic) {
+      log.info('SyntheticBuilder: Assets sortable. ');
+      // The graph is acyclic, that is the assetIds can be sorted in
+      // topological order.
+      final topologicalOrdering = assetGraph.sortedTopologicalOrdering;
+      final result = <AssetId>{};
+      log.fine(topologicalOrdering);
+      for (final assetId in topologicalOrdering!) {
+        if (assetIds.contains(assetId)) {
+          result.add(assetId);
+        }
+      }
+      return result;
+    } else {
+      // The graph is not acyclic but the relevant assetIds may still be
+      // sorted in order of dependence if the graph cycle does not lead
+      // to input file including each other.
+      // Note: Input files include each other if their assetIds are located
+      // in the same strongly connected component.
+      final components = assetGraph.stronglyConnectedComponents;
 
-      // Read library.
-      final library = await buildStep.resolver.libraryFor(assetId);
+      final assetsInComponent = HashSet.of([]);
+      bool isQuasiSortable = true;
 
-      for (final fragment in library.fragments) {
-        for (final import in fragment.importedLibraries) {
-          //final uri = Uri.parse(import.source.uri.toString());
-          // TODO:Iterate over all fragments.
-          final uri = import.uri;
-          // Skip if uri scheme is not "package" or "asset".
-          if (uri.scheme == 'package' ||
-              uri.scheme == 'asset' ||
-              uri.scheme == '') {
-            // Normalise uri to handle relative and package import directives.
-            final importedAssetId = AssetId.resolve(uri, from: assetId);
-            // Add vertex matching import directive.
-            if (assetMap[importedAssetId.uri] != null) {
-              importedAssetIds.add(assetMap[importedAssetId.uri]!);
-            }
+      componentLoop:
+      for (final component in components) {
+        // Start with an empty set when proceeding to the next component!
+        assetsInComponent.clear();
+        for (final assetId in assetIds) {
+          if (component.contains(assetId)) {
+            assetsInComponent.add(assetId);
+          }
+          if (assetsInComponent.length > 1) {
+            // Two assets in the same component!
+            // The files depend on each other.
+            isQuasiSortable = false;
+            break componentLoop;
           }
         }
       }
-      assetGraph.addEdges(assetId, importedAssetIds);
+
+      if (isQuasiSortable) {
+        log.info('SyntheticBuilder: Assets quasi-sortable.');
+        final sortedAssets = components.fold(
+          <AssetId>[],
+          (flattendList, component) => flattendList
+            ..addAll(component.where((assetId) => assetIds.contains(assetId))),
+        );
+        return sortedAssets.toSet(); //
+      } else {
+        final message = assetGraph
+            .path(assetsInComponent.first, assetsInComponent.first)
+            .map((assetId) => assetId.path);
+        final invalidState = message.join(' imports ');
+
+        throw ErrorOf<SyntheticBuilder>(
+          message: 'Circular dependency detected.',
+          expectedState:
+              'Input files must not include each other. '
+              'Alternatively, consider setting builder parameter '
+              '<sortAssets: false>. See builder.yaml.',
+          invalidState: invalidState,
+        );
+      }
     }
-
-    final topologicalOrdering = assetGraph.sortedTopologicalOrdering;
-
-    if (topologicalOrdering == null) {
-      // Find the first cycle
-      final cycle = assetGraph.cycle;
-
-      throw ErrorOf<SyntheticBuilder>(
-        message: 'Circular dependency detected.',
-        expectedState:
-            'Input files must not include each other. '
-            'Alternatively, set constructor parameter "sortAssets: false".',
-        invalidState: 'File ${cycle.join(' imports ')}.',
-      );
-    }
-
-    // Return reversed topological ordering of asset ids.
-    return topologicalOrdering;
   }
 }
