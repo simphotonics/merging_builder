@@ -12,7 +12,7 @@ import 'synthetic_builder.dart';
 
 /// Builder that merges its output into one file.
 ///
-/// - Input files must be specified using [Glob] syntax.
+/// - Input files must be specified using [Glob] syntax. 99
 ///
 /// - Requires a generator extending [MergingGenerator].
 class MergingBuilder<T, A> extends SyntheticBuilder {

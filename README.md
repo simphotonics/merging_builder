@@ -7,28 +7,9 @@
 
 Source code generation has become an important software development tool
 when building and maintaining a large number of data models,
-data access object, widgets, etc.
-
-The premise of *source code generation* is that we can specify
+data access object, widgets, etc. The premise of *source code generation* is that we can specify
 (hopefully few) details and flesh out the rest of the classes,
 and methods during the build process.
-
-The build process consists of scannig the appropriate files,
-extracting the required information,
-generating the source code, and writing the source code to certain files.
-The build process
-also entails keeping track of files changes,
-delete conflicting files, reporting issues and progress.
-
-Source code generation using Dart relies heavily on *constants* known at compile time.
-Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
-class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
-Compile-time constant expressions are represented by a [`DartObject`][DartObject]
-and can be accessed by using [`computeConstantValue()`][computeConstantValue()] a method available for elements representing a variable.
-
-In practice, we mark constant constant classes with annotations and instruct
-the builder to processes only the annotated objects.
-
 
 The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
 
@@ -57,134 +38,15 @@ To set up a build system the following steps are required:
 
 2. In the package **defining** the custom builder, create a custom generator that extends [`MergingGenerator`][MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
 
-
-<details> <summary> Show details. </summary>
-
-```Dart
-import 'dart:async';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:build/build.dart' show BuildStep;
-import 'package:merging_builder/merging_builder.dart';
-import 'package:quote_buffer/quote_buffer.dart';
-import 'package:source_gen/source_gen.dart' show ConstantReader;
-import '../annotations/add_names.dart';
-/// Reads a field element of type [List<String] and generates the merged content.
-class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
-  /// Portion of source code included at the top of the generated file.
-  /// Should be specified as header when constructing the merging builder.
-  static String get header {
-    return '/// Added names.';
-  }
-  /// Portion of source code included at the very bottom of the generated file.
-  /// Should be specified as [footer] when constructing the merging builder.
-  static String get footer {
-    return '/// This is the footer.';
-  }
-  @override
-  List<String> generateStreamItemForAnnotatedElement(
-    Element element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) {
-    final result = <String>[];
-    if (element is ClassElement) {
-      final nameObjects =
-          element.getField('names')?.computeConstantValue()?.toListValue();
-      for (final nameObj in nameObjects ?? []) {
-        result.add(nameObj.toStringValue());
-      }
-      return result;
-    }
-    return <String>['Could not read name'];
-  }
-  /// Returns the merged content.
-  @override
-  FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
-    final b = StringBuffer();
-   var i = 0;
-    final allNames = <List<String>>[];
-    // Iterate over stream:
-    await for (final names in stream) {
-      b.write('final name$i = [');
-      b.writelnAllQ(names, separator2: ',');
-      b.writeln('];');
-      ++i;
-      allNames.add(names);
-    }
-    b.writeln('');
-    b.writeln('final List<List<String>> names = [');
-    for (var names in allNames) {
-      b.writeln('  [');
-      b.writelnAllQ(names, separator2: ',');
-      b.writeln('  ],');
-    }
-    b.writeln('];');
-    return b.toString();
-  }
-}
-
-```
-</details>
-
 3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package.
    * The generator `AddNamesGenerator` shown below extends `MergingGenerator<List<String>, AddNames>` (see step 2).
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
    * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
 
-<details> <summary> Show details. </summary>
-
-```Dart
-import 'package:build/build.dart';
-import 'package:merging_builder/merging_builder.dart';
-import 'src/generators/add_names_generator.dart';
-import 'src/generators/assistant_generator.dart';
-/// Defines a merging builder.
-/// Honours the options: `input_files`, `output_file`, `header`, `footer`,
-/// and `sort_assets` that can be set in `build.yaml`.
-Builder addNamesBuilder(BuilderOptions options) {
-  BuilderOptions defaultOptions = BuilderOptions({
-    'input_files': 'lib/*.dart',
-    'output_file': 'lib/output.dart',
-    'header': AddNamesGenerator.header,
-    'footer': AddNamesGenerator.footer,
-    'sort_assets': true,
-  });
-  // Apply user set options.
-  options = defaultOptions.overrideWith(options);
-  return MergingBuilder<List<String>, LibDir>(
-    generator: AddNamesGenerator(),
-    inputFiles: options.config['input_files'],
-    outputFile: options.config['output_file'],
-    header: options.config['header'],
-    footer: options.config['footer'],
-    sortAssets: options.config['sort_assets'],
-  );
-}
-/// Defines a standalone builder.
-Builder assistantBuilder(BuilderOptions options) {
-  BuilderOptions defaultOptions = BuilderOptions({
-    'input_files': 'lib/*.dart',
-    'output_files': 'lib/output/assistant_(*).dart',
-    'header': AssistantGenerator.header,
-    'footer': AssistantGenerator.footer,
-    'root': ''
-  });
-  options = defaultOptions.overrideWith(options);
-  return StandaloneBuilder<LibDir>(
-      generator: AssistantGenerator(),
-      inputFiles: options.config['input_files'],
-      outputFiles: options.config['output_files'],
-      root: options.config['root']);
-}
-```
-</details>
-
 4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for
-[`MergingBuilder`][MergingBuilder] must be specified using the notation available for **synthetic input**. For example, `"$lib$"` indicates that the
+[`MergingBuilder`][MergingBuilder] must be specified using the notation
+available for **synthetic input**. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
-For more information consult the section: [Writing a Builder using a synthetic input]
-found in the documentation of the Dart package [`build`][build].
-
     ```Yaml
     builders:
       add_names_builder:
@@ -201,7 +63,9 @@ found in the documentation of the Dart package [`build`][build].
         build_to: source
     ```
 
-5. In the package **using** the custom builder, `researcher`, add `add_names_builder` to the list of known builders. The file `build.yaml` is shown below.
+5. In the package **using** the custom builder, `researcher`,
+add `add_names_builder` to the list of known builders.
+The file `build.yaml` is shown below.
 
     ```Yaml
      targets:
@@ -230,19 +94,6 @@ found in the documentation of the Dart package [`build`][build].
 6. In the package **using** the builder, `researcher`, add `researcher_builder`
 and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
 
-    ```Yaml
-    name: researcher
-      description:
-        Example demonstrating how to use the library merging_builder.
-
-      environment:
-        sdk: '>=2.17.0 <3.0.0'
-
-      dev_dependencies:
-        build_runner: ^1.10.0
-        researcher_builder:
-          path: ../researcher_builder
-    ```
 
 7. Initiate the build process by using the command:
    ```console
@@ -251,24 +102,22 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
 
 ## Implementation Details
 
-The classes [`MergingBuilder<T, S extends SyntheticInput>`][class-merging-builder]
-and [`StandaloneBuilder<S extends SyntheticInput>`][class-standalone-builder]
-use *synthetic input* which must be specified
-by choosing either [`LibDir`][LibDir] or [`PackageDir`][PackageDir] as type parameter `S`.
+The classes [`MergingBuilder`][class-merging-builder]
+and [`StandaloneBuilder`][class-standalone-builder]
+use *synthetic input*.
 
-[`LibDir`][LibDir] indicates that input and output files are located in the package directory `lib` or a subfolder thereof. For more information
-about *synthetic input* see:
-[Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
-
-### Class - Merging Builder
+### Merging Builder
 
 [`MergingBuilder`][MergingBuilder] reads **several input files** and writes merged output to **one output file**.
-The builder provides the option to sort the input files in reverse topological order. If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
-generating code that needs to list variables or call functions in order of dependence. To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
+The builder provides the option to sort the input files in reverse topological order.
+If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
+generating code that needs to list variables or call functions in order of dependence.
+To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
+
 
 A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
 
-The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the merged source-code output.
+The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the *merged* source-code output.
 
 The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
 
@@ -277,8 +126,10 @@ The figure below shows the flow of data between the builder and the generator. T
 
 ### Class - Standalone Builder
 
-[`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and writes standalone files to a custom location.
-*Standalone* means the output files may be written to a custom folder and not only the extension but the
+[`StandaloneBuilder`][StandaloneBuilder] reads input files and writes
+corresponding output files to a custom location.
+*Standalone* means the output files may be written to a custom folder and
+not only the extension but the
 name of the output file can be configured.
 
 The input file path (constructor parameter `inputFiles`) may include

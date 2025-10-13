@@ -9,8 +9,6 @@ import '../enum/build_location.dart';
 
 /// Base class of a builder that uses synthetic input.
 ///
-/// For more information about synthetic input see:
-/// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
 abstract class SyntheticBuilder implements Builder {
   /// Super constructor of an object of type `SyntheticBuilder`.
   /// * `inputFiles`: Path to the input files relative to the
