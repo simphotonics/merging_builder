@@ -14,9 +14,7 @@ and methods during the build process.
 The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
 
 * [`MergingBuilder`][class-merging-builder] reads **several input files** and writes
-merged output to **one output file**. The builder provides the option to
-sort the processing order of the input files in reverse topological order.
-(In the file `build.yaml`, under builder `options` set: `sort_assets: true`).
+merged output to **one output file** to a custom location.
 
 * [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and
 writes standalone files to a custom location. In this context, **standalone**
@@ -30,20 +28,21 @@ be configured (as opposed to using part files).
 Following the example of [`source_gen`][source_gen], it is common practice to
 separate *builders* and *generators* from the code using those builders.
 
-In the [example] provided with this library, the package defining a new
+In the [example] project provided, the package defining a new
 builder is called `researcher_builder` and the package using this builder is called `researcher`.
 To set up a build system the following steps are required:
 
-1. Include [`merging_builder`][merging_builder], [`build`][build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].
+### Builder Package Setup
 
-2. In the package **defining** the custom builder, create a custom generator that extends [`MergingGenerator`][MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
+1. Get dependencies: Include [`merging_builder`][merging_builder], [`build`][build] as *dependencies* in the file `pubspec.yaml`. In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].
 
-3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package.
-   * The generator `AddNamesGenerator` shown below extends `MergingGenerator<List<String>, AddNames>` (see step 2).
+2. Create a generator: Create a custom generator that extends [`MergingGenerator`][MergingGenerator]. In [example] `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
+
+3. Create a builder: Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package.
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
-   * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
+   * The builder definition includes the default values of the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets`. These options can be overwritten by the user of the builder by specifying them explicitly in the file `build.yaml`  located  in the package `researcher` (see step 5).
 
-4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for
+4. Add a builder configuration:  The build extensions for
 [`MergingBuilder`][MergingBuilder] must be specified using the notation
 available for **synthetic input**. For example, `"$lib$"` indicates that the
 input files are located in the folder `lib` or a subfolder thereof.
@@ -63,9 +62,15 @@ input files are located in the folder `lib` or a subfolder thereof.
         build_to: source
     ```
 
-5. In the package **using** the custom builder, `researcher`,
-add `add_names_builder` to the list of known builders.
-The file `build.yaml` is shown below.
+### User Package Setup
+
+The following steps are performed in the package that is using the custom builder.
+
+1. Add dependencies: Add the builder package and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
+
+2. Builder configuration: Add the builder to the list of known builders and configure
+the available options.
+The sample `build.yaml` file is shown below.
 
     ```Yaml
      targets:
@@ -91,11 +96,7 @@ The file `build.yaml` is shown below.
                root: ''
     ```
 
-6. In the package **using** the builder, `researcher`, add `researcher_builder`
-and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.yaml`.
-
-
-7. Initiate the build process by using the command:
+3. Initiate the build process by using the command:
    ```console
    # dart run build_runner build --delete-conflicting-outputs --verbose
    ```
@@ -114,13 +115,11 @@ If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *
 generating code that needs to list variables or call functions in order of dependence.
 To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
 
-
 A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
 
-The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each annotated element in each input file. It is the task of this method to generate the *merged* source-code output.
+The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each element annotated with an annotation of type `A` in each input file. It is the task of this method to generate the *merged* source-code output.
 
 The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
-
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
@@ -128,9 +127,6 @@ The figure below shows the flow of data between the builder and the generator. T
 
 [`StandaloneBuilder`][StandaloneBuilder] reads input files and writes
 corresponding output files to a custom location.
-*Standalone* means the output files may be written to a custom folder and
-not only the extension but the
-name of the output file can be configured.
 
 The input file path (constructor parameter `inputFiles`) may include
 wild-card notation supported by [`Glob`][Glob].
