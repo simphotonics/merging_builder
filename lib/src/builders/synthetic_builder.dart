@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:directed_graph/directed_graph.dart';
@@ -7,13 +5,13 @@ import 'package:exception_templates/exception_templates.dart';
 import 'package:glob/glob.dart';
 
 import 'formatter.dart';
-import 'synthetic_input.dart';
+import '../enum/build_location.dart';
 
 /// Base class of a builder that uses synthetic input.
 ///
 /// For more information about synthetic input see:
 /// [Writing an Aggregate Builder](https://github.com/dart-lang/build/blob/master/docs/writing_an_aggregate_builder.md#writing-the-builder-using-a-synthetic-input).
-abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
+abstract class SyntheticBuilder implements Builder {
   /// Super constructor of an object of type `SyntheticBuilder`.
   /// * `inputFiles`: Path to the input files relative to the
   /// package root directory. Glob-style syntax is
@@ -28,6 +26,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   /// To disable formatting one may pass a closure returning the
   /// input: `(input) => input` as argument for `formatter`.
   SyntheticBuilder({
+    required this.buildLocation,
     required this.inputFiles,
     this.header = '',
     this.footer = '',
@@ -36,8 +35,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
            formatter ??
            DartFormatter(
              languageVersion: DartFormatter.latestLanguageVersion,
-           ).format,
-       syntheticInput = SyntheticInput.instance<S>();
+           ).format;
 
   /// Input files. Specify the complete path relative to the
   /// root directory.
@@ -63,7 +61,7 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   final Formatter formatter;
 
   /// The synthetic input used by this builder.
-  final S syntheticInput;
+  final BuildLocation buildLocation;
 
   /// Returns the generated source code
   /// after adding the header and footer.
@@ -154,7 +152,6 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
   Future<Set<AssetId>> orderedLibraryAssetIds(BuildStep buildStep) async {
     final assetGraph = DirectedGraph<AssetId>(
       {},
-      // Alphabetic order
       comparator: ((v1, v2) => v1.compareTo(v2)),
     );
 
@@ -177,71 +174,32 @@ abstract class SyntheticBuilder<S extends SyntheticInput> implements Builder {
         assetIds.add(assetId);
       }
     }
+    final result = assetGraph.reverseQuasiTopologicalOrdering(
+      assetIds,
+      sorted: true,
+    );
 
-    if (assetGraph.isAcyclic) {
-      log.info('SyntheticBuilder: Assets sortable. ');
-      // The graph is acyclic, that is the assetIds can be sorted in
-      // topological order.
-      final topologicalOrdering = assetGraph.sortedTopologicalOrdering;
-      final result = <AssetId>{};
-      log.fine(topologicalOrdering);
-      for (final assetId in topologicalOrdering!) {
-        if (assetIds.contains(assetId)) {
-          result.add(assetId);
-        }
-      }
+    if (result != null) {
       return result;
     } else {
-      // The graph is not acyclic but the relevant assetIds may still be
-      // sorted in order of dependence if the graph cycle does not lead
-      // to input file including each other.
-      // Note: Input files include each other if their assetIds are located
-      // in the same strongly connected component.
-      final components = assetGraph.stronglyConnectedComponents;
-
-      final assetsInComponent = HashSet.of([]);
-      bool isQuasiSortable = true;
-
-      componentLoop:
-      for (final component in components) {
-        // Start with an empty set when proceeding to the next component!
-        assetsInComponent.clear();
-        for (final assetId in assetIds) {
-          if (component.contains(assetId)) {
-            assetsInComponent.add(assetId);
-          }
-          if (assetsInComponent.length > 1) {
-            // Two assets in the same component!
-            // The files depend on each other.
-            isQuasiSortable = false;
-            break componentLoop;
-          }
+      // Find relevant cycle
+      var invalidState = '';
+      for (final assetId in assetIds) {
+        final cycle = assetGraph.shortestPath(assetId, assetId);
+        if (cycle.isNotEmpty) {
+          invalidState = cycle.join(' imports ');
+          break;
         }
       }
 
-      if (isQuasiSortable) {
-        log.info('SyntheticBuilder: Assets quasi-sortable.');
-        final sortedAssets = components.fold(
-          <AssetId>[],
-          (flattendList, component) => flattendList
-            ..addAll(component.where((assetId) => assetIds.contains(assetId))),
-        );
-        return sortedAssets.toSet(); //
-      } else {
-        final message = assetGraph
-            .path(assetsInComponent.first, assetsInComponent.first)
-            .map((assetId) => assetId.path);
-        final invalidState = message.join(' imports ');
-
-        throw ErrorOf<SyntheticBuilder>(
-          message: 'Circular dependency detected.',
-          expectedState:
-              'Input files must not include each other. '
-              'Alternatively, consider setting builder parameter '
-              '<sortAssets: false>. See builder.yaml.',
-          invalidState: invalidState,
-        );
-      }
+      throw ErrorOf<SyntheticBuilder>(
+        message: 'Circular dependency detected.',
+        expectedState:
+            'Input files must not include each other. '
+            'Alternatively, consider setting builder parameter '
+            '<sortAssets: false>. See builder.yaml.',
+        invalidState: invalidState,
+      );
     }
   }
 }

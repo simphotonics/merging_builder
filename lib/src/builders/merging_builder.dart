@@ -3,39 +3,42 @@ import 'dart:async';
 import 'package:build/build.dart';
 import 'package:exception_templates/exception_templates.dart';
 import 'package:glob/glob.dart';
+import 'package:merging_builder/src/enum/build_location.dart';
 import 'package:path/path.dart' as path show equals;
 import 'package:source_gen/source_gen.dart' show LibraryReader;
 
 import '../generators/merging_generator.dart';
 import 'synthetic_builder.dart';
-import 'synthetic_input.dart';
 
 /// Builder that merges its output into one file.
 ///
 /// - Input files must be specified using [Glob] syntax.
 ///
 /// - Requires a generator extending [MergingGenerator].
-class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
-  /// Constructs a [MergingBuilder] object.
-  /// * `inputFiles`: Path to the input files relative to the
+class MergingBuilder<T, A> extends SyntheticBuilder {
+  /// Constructs a [MergingBuilder] object, where [T] is the output type and
+  /// [A] is the annotation type used by the [MergingGenerator].
+  /// * [inputFiles]: Path to the input files relative to the
   /// package root directory. Glob-style syntax is
   /// allowed, defaults to: `'lib/*.dart'`.
-  /// * `outputFile`: defaults to: `'lib/merged_output.dart'`.
-  /// * `generator`: Must extend `MergingGenerator<T, A>`.
-  /// * `header`: `String` that will be inserted at the top of the
+  /// * [outputFile]: defaults to: `'lib/merged_output.dart'`.
+  /// * [buildLocation]:
+  /// * [generator]: Must extend `MergingGenerator<T, A>`.
+  /// * [header]: `String` that will be inserted at the top of the
   /// generated file below the 'DO NOT EDIT' warning message.
-  /// * `footer`: String that will be inserted at the very bottom of the
+  /// * [footer]: String that will be inserted at the very bottom of the
   /// generated file.
-  /// * `formatter`: A function with signature `String Function(String input)`
+  /// * [formatter]: A function with signature `String Function(String input)`
   /// that is used to format the generated source code.
   /// The default formatter is: `DartFormatter().format`.
   /// Note: The standard Dart formatter will throw an error if the generated
   /// source code contains invalid syntax. To temporarily suppress formatting
   /// use: `(String input) => input`.
   MergingBuilder({
+    required this.generator,
     super.inputFiles = 'lib/*.dart',
     this.outputFile = 'lib/merged_output.dart',
-    required this.generator,
+    super.buildLocation = BuildLocation.lib,
     super.header,
     super.footer,
     this.sortAssets = false,
@@ -46,8 +49,8 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// Example: `lib/merged_output.dart`
   final String outputFile;
 
-  /// Class extending [MergingGenerator<T,A>].
-  final MergingGenerator<T, dynamic> generator;
+  /// Class extending [MergingGenerator].
+  final MergingGenerator<T, A> generator;
 
   /// Set to true to have assets sorted in reverse topological order of
   /// dependency.
@@ -60,7 +63,7 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
 
   @override
   Map<String, List<String>> get buildExtensions => {
-    syntheticInput.value: [outputFile],
+    buildLocation.value: [outputFile],
   };
 
   /// Writes the merged content to the stand-alone file
@@ -68,8 +71,8 @@ class MergingBuilder<T, S extends SyntheticInput> extends SyntheticBuilder<S> {
   @override
   FutureOr<void> build(BuildStep buildStep) async {
     // Validate synthetic input/output.
-    SyntheticInput.validatePath<S>(inputFiles);
-    SyntheticInput.validatePath<S>(outputFile);
+    buildLocation.validatePath(inputFiles);
+    buildLocation.validatePath(outputFile);
 
     final libraryAssetIds = (sortAssets)
         ? await orderedLibraryAssetIds(buildStep)

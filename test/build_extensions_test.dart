@@ -30,19 +30,20 @@ class MockMergingGenerator
 
 /// Tests if the builder generates the expected buildExtensions.
 void main() {
-  final libBuilder = MergingBuilder<List<double>, LibDir>(
+  final libBuilder = MergingBuilder<List<double>, MockAnnotation>(
     generator: MockMergingGenerator(),
     inputFiles: 'lib/input/*.dart',
     outputFile: 'lib/output/output.dart',
   );
 
-  final packageBuilder = MergingBuilder<List<double>, PackageDir>(
+  final packageBuilder = MergingBuilder<List<double>, MockAnnotation>(
     generator: MockMergingGenerator(),
     inputFiles: 'test/input/*.dart',
     outputFile: 'test/output/output.dart',
+    buildLocation: BuildLocation.package,
   );
 
-  final misconfiguredlibBuilder = MergingBuilder<List<double>, LibDir>(
+  final misconfiguredlibBuilder = MergingBuilder<List<double>, MockAnnotation>(
     generator: MockMergingGenerator(),
     inputFiles: 'web/input/*.dart',
     outputFile: 'web/output/output.dart',
@@ -64,7 +65,7 @@ void main() {
         final buildExtensions = misconfiguredlibBuilder.buildExtensions;
         buildExtensions.clear();
       } catch (e) {
-        expect(e, isA<ErrorOf<SyntheticInput>>());
+        expect(e, isA<ErrorOf<BuildLocation>>());
       }
     });
   });

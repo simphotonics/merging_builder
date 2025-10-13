@@ -4,31 +4,21 @@ import 'package:test/test.dart';
 
 /// Tests class `SyntheticInput`.
 void main() {
-  final lib = LibDir();
-  final package = PackageDir();
+  final lib = BuildLocation.lib;
+  final package = BuildLocation.package;
 
-  group('SyntheticInput:', () {
-    test(r'instance<LibDir>()', () {
-      expect(SyntheticInput.instance<LibDir>(), lib);
-    });
-    test(r'instance<PackageDir>()', () {
-      expect(SyntheticInput.instance<PackageDir>(), package);
-    });
-
-    test('instance()', () {
-      expect(SyntheticInput.instance(), package);
-    });
+  group('BuildLocation:', () {
     test('isValidPath<\$Lib\$>(\'lib/*.dart\') => true', () {
-      expect(SyntheticInput.isValidPath<LibDir>('lib/*.dart'), true);
+      expect(lib.isValidPath('lib/*.dart'), true);
     });
     test('isValidPath<\$Lib\$>(\'test/*.dart\') => false', () {
-      expect(SyntheticInput.isValidPath<LibDir>('test/*.dart'), false);
+      expect(lib.isValidPath('test/*.dart'), false);
     });
     test('validatePath<\$Lib\$>(\'test/*.dart\') | throws BuilderError', () {
       try {
-        SyntheticInput.validatePath<LibDir>('test/*.dart');
+        lib.validatePath('test/*.dart');
       } catch (e) {
-        expect(e, isA<ErrorOf<SyntheticInput>>());
+        expect(e, isA<ErrorOf<BuildLocation>>());
       }
     });
   });

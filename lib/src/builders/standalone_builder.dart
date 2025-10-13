@@ -5,17 +5,17 @@ import 'package:exception_templates/exception_templates.dart';
 import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:lazy_memo/lazy_memo.dart';
+import 'package:merging_builder/src/enum/build_location.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart' show Generator, LibraryReader;
 
 import 'synthetic_builder.dart';
-import 'synthetic_input.dart';
 
 /// Builder that uses synthetic input and
 /// creates one output file for each input file.
 /// * The type parameter `S` represents the synthetic input used by the builder.
 ///   Valid types are [LibDir] and [PackageDir], both extending [SyntheticInput].
-class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
+class StandaloneBuilder extends SyntheticBuilder {
   /// Constructs a [StandaloneBuilder] object.
   ///
   /// - [inputFiles] defaults to: `'lib/*.dart'`. Glob-style syntax supported.
@@ -37,9 +37,10 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// To disable formatting one may pass a closure returning the
   /// input: `(input) => input` as argument for `formatter`.
   StandaloneBuilder({
+    required this.generator,
     super.inputFiles = 'lib/*.dart',
     this.outputFiles = 'lib/standalone_(*).dart',
-    required this.generator,
+    super.buildLocation = BuildLocation.lib ,
     super.header,
     super.footer,
     super.formatter,
@@ -74,7 +75,7 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// type parameter [S].
   @override
   Map<String, List<String>> get buildExtensions => {
-    syntheticInput.value: _resolvedOutputFiles(),
+    buildLocation.value: _resolvedOutputFiles(),
   };
 
   @override
@@ -108,8 +109,8 @@ class StandaloneBuilder<S extends SyntheticInput> extends SyntheticBuilder<S> {
   /// Returns a list of output file paths.
   List<String> _outputPaths() {
     final result = <String>[];
-    SyntheticInput.validatePath<S>(inputFiles);
-    SyntheticInput.validatePath<S>(outputFiles);
+    buildLocation.validatePath(inputFiles);
+    buildLocation.validatePath(outputFiles);
     final resolvedInputFiles = Glob(inputFiles);
     final fileSystem = LocalFileSystem();
     for (final inputEntity in resolvedInputFiles.listFileSystemSync(

@@ -46,146 +46,138 @@ be configured (as opposed to using part files).
 
 ## Usage
 
-Following the example of [`source_gen`][source_gen], it is common practice to separate *builders* and *generators* from the code using those builders.
+Following the example of [`source_gen`][source_gen], it is common practice to
+separate *builders* and *generators* from the code using those builders.
 
-In the [example] provided with this library, the package defining a new builder is called `researcher_builder` and the package using this builder is called `researcher`. To set up a build system the following steps are required:
+In the [example] provided with this library, the package defining a new
+builder is called `researcher_builder` and the package using this builder is called `researcher`.
+To set up a build system the following steps are required:
 
 1. Include [`merging_builder`][merging_builder], [`build`][build] as *dependencies* in the file `pubspec.yaml` of the package **defining** the builder. In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].
 
 2. In the package **defining** the custom builder, create a custom generator that extends [`MergingGenerator`][MergingGenerator]. Users will have to implement the methods `generateItemForAnnotatedElement` and `generateMergedContent`. In the example shown below `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
 
 
-   <details> <summary> Show details. </summary>
+<details> <summary> Show details. </summary>
 
-    ```Dart
-
-    import 'dart:async';
-
-    import 'package:analyzer/dart/element/element.dart';
-    import 'package:build/build.dart' show BuildStep;
-    import 'package:merging_builder/merging_builder.dart';
-    import 'package:quote_buffer/quote_buffer.dart';
-
-    import 'package:source_gen/source_gen.dart' show ConstantReader;
-
-    import '../annotations/add_names.dart';
-
-
-    /// Reads a field element of type [List<String] and generates the merged content.
-    class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
-      /// Portion of source code included at the top of the generated file.
-      /// Should be specified as header when constructing the merging builder.
-      static String get header {
-        return '/// Added names.';
+```Dart
+import 'dart:async';
+import 'package:analyzer/dart/element/element.dart';
+import 'package:build/build.dart' show BuildStep;
+import 'package:merging_builder/merging_builder.dart';
+import 'package:quote_buffer/quote_buffer.dart';
+import 'package:source_gen/source_gen.dart' show ConstantReader;
+import '../annotations/add_names.dart';
+/// Reads a field element of type [List<String] and generates the merged content.
+class AddNamesGenerator extends MergingGenerator<List<String>, AddNames> {
+  /// Portion of source code included at the top of the generated file.
+  /// Should be specified as header when constructing the merging builder.
+  static String get header {
+    return '/// Added names.';
+  }
+  /// Portion of source code included at the very bottom of the generated file.
+  /// Should be specified as [footer] when constructing the merging builder.
+  static String get footer {
+    return '/// This is the footer.';
+  }
+  @override
+  List<String> generateStreamItemForAnnotatedElement(
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) {
+    final result = <String>[];
+    if (element is ClassElement) {
+      final nameObjects =
+          element.getField('names')?.computeConstantValue()?.toListValue();
+      for (final nameObj in nameObjects ?? []) {
+        result.add(nameObj.toStringValue());
       }
-
-      /// Portion of source code included at the very bottom of the generated file.
-      /// Should be specified as [footer] when constructing the merging builder.
-      static String get footer {
-        return '/// This is the footer.';
-      }
-
-      @override
-      List<String> generateStreamItemForAnnotatedElement(
-        Element element,
-        ConstantReader annotation,
-        BuildStep buildStep,
-      ) {
-        final result = <String>[];
-        if (element is ClassElement) {
-          final nameObjects =
-              element.getField('names')?.computeConstantValue()?.toListValue();
-          for (final nameObj in nameObjects ?? []) {
-            result.add(nameObj.toStringValue());
-          }
-          return result;
-        }
-        return <String>['Could not read name'];
-      }
-
-      /// Returns the merged content.
-      @override
-      FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
-        final b = StringBuffer();
-        var i = 0;
-        final allNames = <List<String>>[];
-        // Iterate over stream:
-        await for (final names in stream) {
-          b.write('final name$i = [');
-          b.writelnAllQ(names, separator2: ',');
-          b.writeln('];');
-          ++i;
-          allNames.add(names);
-        }
-
-        b.writeln('');
-        b.writeln('final List<List<String>> names = [');
-        for (var names in allNames) {
-          b.writeln('  [');
-          b.writelnAllQ(names, separator2: ',');
-          b.writeln('  ],');
-        }
-        b.writeln('];');
-        return b.toString();
-      }
+      return result;
     }
-    ```
+    return <String>['Could not read name'];
+  }
+  /// Returns the merged content.
+  @override
+  FutureOr<String> generateMergedContent(Stream<List<String>> stream) async {
+    final b = StringBuffer();
+   var i = 0;
+    final allNames = <List<String>>[];
+    // Iterate over stream:
+    await for (final names in stream) {
+      b.write('final name$i = [');
+      b.writelnAllQ(names, separator2: ',');
+      b.writeln('];');
+      ++i;
+      allNames.add(names);
+    }
+    b.writeln('');
+    b.writeln('final List<List<String>> names = [');
+    for (var names in allNames) {
+      b.writeln('  [');
+      b.writelnAllQ(names, separator2: ',');
+      b.writeln('  ],');
+    }
+    b.writeln('];');
+    return b.toString();
+  }
+}
 
-   </details>
+```
+</details>
 
 3. Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package.
    * The generator `AddNamesGenerator` shown below extends `MergingGenerator<List<String>, AddNames>` (see step 2).
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
    * The builder definition shown below honours the *options* `input_files`, `output_file`, `header`, `footer`, and `sort_assets` that can be set in the file `build.yaml`  located in the package `researcher` (see step 5).
 
-    ```Dart
-     import 'package:build/build.dart';
-     import 'package:merging_builder/merging_builder.dart';
+<details> <summary> Show details. </summary>
 
-     import 'src/generators/add_names_generator.dart';
-     import 'src/generators/assistant_generator.dart';
-
-     /// Defines a merging builder.
-     /// Honours the options: `input_files`, `output_file`, `header`, `footer`,
-     /// and `sort_assets` that can be set in `build.yaml`.
-     Builder addNamesBuilder(BuilderOptions options) {
-       BuilderOptions defaultOptions = BuilderOptions({
-         'input_files': 'lib/*.dart',
-         'output_file': 'lib/output.dart',
-         'header': AddNamesGenerator.header,
-         'footer': AddNamesGenerator.footer,
-         'sort_assets': true,
-       });
-
-       // Apply user set options.
-       options = defaultOptions.overrideWith(options);
-       return MergingBuilder<List<String>, LibDir>(
-         generator: AddNamesGenerator(),
-         inputFiles: options.config['input_files'],
-         outputFile: options.config['output_file'],
-         header: options.config['header'],
-         footer: options.config['footer'],
-         sortAssets: options.config['sort_assets'],
-       );
-     }
-
-     /// Defines a standalone builder.
-     Builder assistantBuilder(BuilderOptions options) {
-       BuilderOptions defaultOptions = BuilderOptions({
-         'input_files': 'lib/*.dart',
-         'output_files': 'lib/output/assistant_(*).dart',
-         'header': AssistantGenerator.header,
-         'footer': AssistantGenerator.footer,
-         'root': ''
-       });
-       options = defaultOptions.overrideWith(options);
-       return StandaloneBuilder<LibDir>(
-           generator: AssistantGenerator(),
-           inputFiles: options.config['input_files'],
-           outputFiles: options.config['output_files'],
-           root: options.config['root']);
-     }
-    ```
+```Dart
+import 'package:build/build.dart';
+import 'package:merging_builder/merging_builder.dart';
+import 'src/generators/add_names_generator.dart';
+import 'src/generators/assistant_generator.dart';
+/// Defines a merging builder.
+/// Honours the options: `input_files`, `output_file`, `header`, `footer`,
+/// and `sort_assets` that can be set in `build.yaml`.
+Builder addNamesBuilder(BuilderOptions options) {
+  BuilderOptions defaultOptions = BuilderOptions({
+    'input_files': 'lib/*.dart',
+    'output_file': 'lib/output.dart',
+    'header': AddNamesGenerator.header,
+    'footer': AddNamesGenerator.footer,
+    'sort_assets': true,
+  });
+  // Apply user set options.
+  options = defaultOptions.overrideWith(options);
+  return MergingBuilder<List<String>, LibDir>(
+    generator: AddNamesGenerator(),
+    inputFiles: options.config['input_files'],
+    outputFile: options.config['output_file'],
+    header: options.config['header'],
+    footer: options.config['footer'],
+    sortAssets: options.config['sort_assets'],
+  );
+}
+/// Defines a standalone builder.
+Builder assistantBuilder(BuilderOptions options) {
+  BuilderOptions defaultOptions = BuilderOptions({
+    'input_files': 'lib/*.dart',
+    'output_files': 'lib/output/assistant_(*).dart',
+    'header': AssistantGenerator.header,
+    'footer': AssistantGenerator.footer,
+    'root': ''
+  });
+  options = defaultOptions.overrideWith(options);
+  return StandaloneBuilder<LibDir>(
+      generator: AssistantGenerator(),
+      inputFiles: options.config['input_files'],
+      outputFiles: options.config['output_files'],
+      root: options.config['root']);
+}
+```
+</details>
 
 4. In the package **defining** the builder, add the builder configuration for the builder `add_names_builder` (see below). The build extensions for
 [`MergingBuilder`][MergingBuilder] must be specified using the notation available for **synthetic input**. For example, `"$lib$"` indicates that the
@@ -255,65 +247,7 @@ and [`build_runner`][build_runner] as *dev_dependencies* in the file `pubspec.ya
 7. Initiate the build process by using the command:
    ```console
    # dart run build_runner build --delete-conflicting-outputs --verbose
-   [INFO] Entrypoint:Generating build script...
-   [INFO] Entrypoint:Generating build script completed, took 802ms
-
-   [INFO] BuildDefinition:Initializing inputs
-   [INFO] BuildDefinition:Reading cached asset graph...
-   [INFO] BuildDefinition:Reading cached asset graph completed, took 99ms
-
-   [INFO] BuildDefinition:Checking for updates since last build...
-   [INFO] BuildDefinition:Checking for updates since last build completed, took 772ms
-
-   [INFO] Build:Running build...
-   [FINE] researcher_builder:add_names_builder on lib/$lib$:Running AddNamesGenerator on: lib/input/researcher_b.dart.
-   [FINE] researcher_builder:add_names_builder on lib/$lib$:Running AddNamesGenerator on: lib/input/researcher_a.dart.
-   [FINE] researcher_builder:assistant_builder on lib/$lib$:Running AssistantGenerator on: lib/input/researcher_b.dart.
-   [FINE] researcher_builder:assistant_builder on lib/$lib$:Running AssistantGenerator on: lib/input/researcher_a.dart.
-   [INFO] Build:Running build completed, took 886ms
-
-   [INFO] Build:Caching finalized dependency graph...
-   [INFO] Build:Caching finalized dependency graph completed, took 70ms
-
-   [INFO] Build:Succeeded after 973ms with 3 outputs (2 actions)
    ```
-
-To view the content of the generated files please click below:
-<details> <summary> lib/output/assistant_researcher_a.dart </summary>
-
- ```Dart
- // GENERATED CODE. DO NOT MODIFY. Generated by AssistantGenerator.
- final String assistants = 'Thomas, Mayor';
- ```
-
-</details>
-
-<details> <summary> lib/output/assistant_researcher_b.dart </summary>
-
- ```Dart
- // GENERATED CODE. DO NOT MODIFY. Generated by AssistantGenerator.
- final String assistants = 'Philip, Martens';
- ```
-
-</details>
-<details> <summary> lib/output/researchers.dart </summary>
-
- ```Dart
- // GENERATED CODE. DO NOT MODIFY. Generated by AddNamesGenerator.
-
- // Header specified in build.yaml.
- final name0 = ['Philip', 'Martens'];
- final name1 = ['Thomas', 'Mayor'];
-
- final List<List<String>> names = [
-     ['Philip', 'Martens'],
-     ['Thomas', 'Mayor'],
- ];
-
- // Footer specified in build.yaml.
- ```
-
-</details>
 
 ## Implementation Details
 
