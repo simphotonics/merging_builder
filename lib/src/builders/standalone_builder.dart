@@ -40,7 +40,7 @@ class StandaloneBuilder extends SyntheticBuilder {
     required this.generator,
     super.inputFiles = 'lib/*.dart',
     this.outputFiles = 'lib/standalone_(*).dart',
-    super.buildLocation = BuildLocation.lib ,
+    super.buildLocation = BuildLocation.lib,
     super.header,
     super.footer,
     super.formatter,

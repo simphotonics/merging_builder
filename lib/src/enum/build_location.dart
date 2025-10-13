@@ -1,7 +1,7 @@
 import 'package:exception_templates/exception_templates.dart' show ErrorOf;
 
 /// Enumeration with instances [lib] and [package], representing the
-/// `lib` directory, and the root directory, respectively. 
+/// `lib` directory, and the root directory, respectively.
 enum BuildLocation {
   /// Synthetic input representing files under the `lib` directory.
   lib(baseDirectory: 'lib', value: r'lib/$lib$'),
