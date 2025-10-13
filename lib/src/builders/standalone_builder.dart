@@ -13,8 +13,6 @@ import 'synthetic_builder.dart';
 
 /// Builder that uses synthetic input and
 /// creates one output file for each input file.
-/// * The type parameter `S` represents the synthetic input used by the builder.
-///   Valid types are [LibDir] and [PackageDir], both extending [SyntheticInput].
 class StandaloneBuilder extends SyntheticBuilder {
   /// Constructs a [StandaloneBuilder] object.
   ///
@@ -70,9 +68,6 @@ class StandaloneBuilder extends SyntheticBuilder {
 
   /// Returns a map of type `Map<String, List<String>>`
   /// with content {synthetic input: list of output files}.
-  ///
-  /// The builder uses the synthetic input specified by the
-  /// type parameter [S].
   @override
   Map<String, List<String>> get buildExtensions => {
     buildLocation.value: _resolvedOutputFiles(),

@@ -8,17 +8,16 @@ import 'formatter.dart';
 import '../enum/build_location.dart';
 
 /// Base class of a builder that uses synthetic input.
-///
 abstract class SyntheticBuilder implements Builder {
-  /// Super constructor of an object of type `SyntheticBuilder`.
-  /// * `inputFiles`: Path to the input files relative to the
+  /// Super constructor of an object that extends [SyntheticBuilder].
+  /// * [inputFiles]: Path to the input files relative to the
   /// package root directory. Glob-style syntax is
   /// allowed for example: `lib/*.dart`.
-  /// * `header`: `String` that will be inserted at the top of the
+  /// * [header]: [String] that will be inserted at the top of the
   /// generated file below the 'DO NOT EDIT' warning message.
-  /// * `footer`: String that will be inserted at the very bottom of the
+  /// * [footer]: String that will be inserted at the very bottom of the
   /// generated file.
-  /// * `formatter`: A function with signature `String Function(String input)`
+  /// * [formatter]: A function with signature `String Function(String input)`
   /// that is used to format the generated source code.
   /// The default formatter is: `DartFormatter().format`.
   /// To disable formatting one may pass a closure returning the
@@ -86,7 +85,7 @@ abstract class SyntheticBuilder implements Builder {
   }
 
   /// Returns a list of unordered library asset ids.
-  /// * All non-library inputs (e.g. part files) are skipped.
+  /// * All non-library inputs are skipped.
   Future<List<AssetId>> libraryAssetIds(BuildStep buildStep) async {
     final result = <AssetId>[];
     // Access libraries
@@ -146,7 +145,8 @@ abstract class SyntheticBuilder implements Builder {
   /// dependency order.
   /// * If a file B includes a file A, then A will be appear
   /// before B.
-  /// * Throws [ErrorOf] if a dependency cycle is detected.
+  /// * Throws [ErrorOf] if a dependency cycle is detected and at least
+  /// two input files import each other (directly or indirectly). 
   Future<Set<AssetId>> orderedLibraryAssetIds(BuildStep buildStep) async {
     final assetGraph = DirectedGraph<AssetId>(
       {},

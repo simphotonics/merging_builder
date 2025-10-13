@@ -4,7 +4,7 @@ import 'package:build/build.dart' show BuildStep;
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-/// Generic class that extends [GeneratorForAnnotation<A>].
+/// Generic class that extends [GeneratorForAnnotation].
 /// * The generator method [generateStream] is used to
 ///   pass a stream of objects of type  [T] to a
 ///   builder of type [MergingBuilder].
@@ -26,7 +26,7 @@ abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
     }
   }
 
-  /// Returns an object of type [T] that will be added to the `Stream`
+  /// Returns an object of type [T] that will be added to the [Stream]
   /// emitted by [generateStream].
   ///
   /// * Override this method in classes extending [MergingGenerator].
