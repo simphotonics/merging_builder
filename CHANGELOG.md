@@ -1,15 +1,14 @@
 
 ## 0.3.0
-+ Breaking changes:
+* Breaking changes:
   - Removed class `SyntheticInput` and replaced it with the enum
     `BuildLocation`.
   - Type parameters of `MergingBuilder` now match the type parameters
     of its instance of `MergingGenerator`.
 * Fixed bug in SyntheticBuilder related to the process order of
-* Requires SDK ^0.3.9 and analyzer ^8.2.0
   dependent input files.
+* Requires SDK ^0.3.9 and analyzer ^8.2.0
 * Updated dependencies.
-
 
 
 ## 0.2.8
