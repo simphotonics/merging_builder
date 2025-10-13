@@ -146,7 +146,7 @@ abstract class SyntheticBuilder implements Builder {
   /// * If a file B includes a file A, then A will be appear
   /// before B.
   /// * Throws [ErrorOf] if a dependency cycle is detected and at least
-  /// two input files import each other (directly or indirectly). 
+  /// two input files import each other (directly or indirectly).
   Future<Set<AssetId>> orderedLibraryAssetIds(BuildStep buildStep) async {
     final assetGraph = DirectedGraph<AssetId>(
       {},
