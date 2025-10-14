@@ -10,7 +10,7 @@ homepage: https://github.com/simphotonics/merging_builder
 topics:
   - builder
   - build-runner
-  - source-code-generator
+  - code-generator
 
 environment:
   sdk: '^3.9.0'
