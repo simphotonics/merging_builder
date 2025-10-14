@@ -3,7 +3,7 @@ name: merging_builder
 description: Builder that reads multiple input files and writes merged output
   to one single file.
 
-version: 0.3.0
+version: 0.3.1
 
 homepage: https://github.com/simphotonics/merging_builder
 
