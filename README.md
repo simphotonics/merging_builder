@@ -110,11 +110,19 @@ If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *
 generating code that needs to list variables or call functions in order of dependence.
 To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
 
-A conventional builder typically calls the generator method `generate` from within its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder] calls the [`MergingGenerator`][MergingGenerator] method `generateStream`. It allows the generator to pass a stream of data-type `T` to the builder, one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
+A conventional builder typically calls the generator method `generate` from within
+its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder]
+calls the [`MergingGenerator`][MergingGenerator] method `generateStream`.
+It allows the generator to pass a stream of data-type `T` to the builder,
+one stream item for each annotated element processed to the generator method `generateStreamItemForAnnotatedElement`.
 
-The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`. As a result, this method has access to all stream items of type `T` generated for each element annotated with an annotation of type `A` in each input file. It is the task of this method to generate the *merged* source-code output.
+The private builder method `_combineStreams` combines the streams received for each processed input file and calls the generator method `generateMergedContent`.
+As a result, this method has access to all stream items of type `T` generated f
+or each element annotated with an annotation of type `A` in each input file.
+It is the task of this method to generate the *merged* source-code output.
 
-The figure below shows the flow of data between the builder and the generator. The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
+The figure below shows the flow of data between the builder and the generator.
+The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
