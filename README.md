@@ -102,13 +102,7 @@ A sample `build.yaml` file is shown below.
    # dart run build_runner build --delete-conflicting-outputs --verbose
    ```
 
-## Implementation Details
-
-The classes [`MergingBuilder`][class-merging-builder]
-and [`StandaloneBuilder`][class-standalone-builder]
-use *synthetic input*.
-
-### Merging Builder
+# Merging Builder
 
 [`MergingBuilder`][MergingBuilder] reads *several input files* and writes merged output to *one output file*.
 The builder provides the option to sort the input files in reverse topological order.
@@ -124,7 +118,7 @@ The figure below shows the flow of data between the builder and the generator. T
 
 ![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
 
-### Class - Standalone Builder
+## Standalone Builder
 
 [`StandaloneBuilder`][StandaloneBuilder] reads input files and writes
 corresponding output files to a custom location.
@@ -137,6 +131,7 @@ Output files are specified by using the custom symbol
 
 Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command
 from the root directory of the package the build is applied to.
+
 ## Examples
 
 For further information on how to use [`MergingBuilder`][MergingBuilder] see [example].

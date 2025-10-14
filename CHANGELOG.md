@@ -1,4 +1,7 @@
 
+## 0.3.1
+- Amended docs and package description.
+
 ## 0.3.0
 * Breaking changes:
   - Removed class `SyntheticInput` and replaced it with the enum
