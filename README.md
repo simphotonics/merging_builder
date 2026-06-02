@@ -7,6 +7,8 @@
 
 Source code generation has become an important software development tool
 when building and maintaining a large number of data models,
+
+
 data access object, widgets, etc. The premise of *source code generation* is that we can specify
 (hopefully few) details and flesh out the rest of the classes,
 and methods during the build process.
