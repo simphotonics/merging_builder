@@ -104,7 +104,7 @@ A sample `build.yaml` file is shown below.
    # dart run build_runner build --delete-conflicting-outputs --verbose
    ```
 
-# Merging Builder
+## Merging Builder
 
 [`MergingBuilder`][MergingBuilder] reads *several input files* and writes merged output to *one output file*.
 The builder provides the option to sort the input files in reverse topological order.
