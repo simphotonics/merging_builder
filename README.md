@@ -136,7 +136,7 @@ and generates corresponding output files that are written to a custom location.
 The input file path (constructor parameter `inputFiles`) may include
 wild-card notation supported by [`Glob`][Glob].
 
-Output files are specified by using the custom symbol
+Output files are specified using the custom symbol
 `(*)`. For example, the output path `output\assistant_(*).dart` is interpreted
 such that `(*)` is replaced with the input file name (excluding the file extension).
 For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
