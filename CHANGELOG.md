@@ -1,4 +1,7 @@
 
+# 1.0.0
+- Requires analyser ^14.1.0.
+
 ## 0.3.2
 - Updated dependencies.
 
