@@ -130,16 +130,19 @@ The data type is indicated by the starting point of the connectors. Dotted conne
 
 ## Standalone Builder
 
-[`StandaloneBuilder`][StandaloneBuilder] reads input files and writes
-corresponding output files to a custom location.
+[`StandaloneBuilder`][StandaloneBuilder] allows reading one or several files
+and generates corresponding output files that are written to a custom location.
 
 The input file path (constructor parameter `inputFiles`) may include
 wild-card notation supported by [`Glob`][Glob].
 
 Output files are specified by using the custom symbol
-`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted such that `(*)` is replaced with the input file name (excluding the file extension). For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
+`(*)`. For example, the output path `output\assistant_(*).dart` is interpreted
+such that `(*)` is replaced with the input file name (excluding the file extension).
+For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
 
-Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder] it is recommended to initiate the build command
+Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder]
+it is recommended to initiate the build command
 from the root directory of the package the build is applied to.
 
 ## Examples
