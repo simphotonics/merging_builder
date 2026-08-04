@@ -4,9 +4,18 @@
 
 ## Introduction
 
-The package [`merging_builder`][merging_builder] provides a Dart builder that reads *several input files* and writes the merged output to *one output file*.
+The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
 
-The projec provided as an [example] contains two packages:
+* [`MergingBuilder`][class-merging-builder] reads *several input files* and writes
+merged output to *one output file* to a custom location.
+
+* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and
+writes standalone files to a custom location. In this context, *standalone*
+means the output files may be written to a *custom folder* and
+not only the *extension* but the *name* of the output file can
+be configured (as opposed to using part files).
+
+The project provided as an usage [example] contains two packages:
 * The package [`researcher_builder`][researcher_builder] depends on [`merging_builder`][merging_builder] in order to define the builder [`add_names_builder`][add_names_builder] and the merging generator [`add_names_generator`][add_names_generator].
 
 * The package [`researcher`][researcher] depends on [`researcher_builder`][researcher_builder], specified as a *dev_dependency*, in order to access the builder [`add_names_builder`][add_names_builder] during the build process.
@@ -37,5 +46,7 @@ Please file feature requests and bugs at the [issue tracker].
 [researcher]: https://github.com/simphotonics/merging_builder_example/blob/researcher
 
 [researcher_builder]: https://github.com/simphotonics/merging_builder_example/blob/researcher_builder
+
+[StandaloneBuilder]: https://pub.dev/documentation/merging_builder/latest/merging_builder/StandaloneBuilder-class.html
 
 [usage]: https://github.com/simphotonics/merging_builder#usage
