@@ -7,9 +7,7 @@ import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:test/test.dart';
 
-class MockAnnotation {
-  const MockAnnotation();
-}
+class const MockAnnotation();
 
 class MockMergingGenerator
     extends MergingGenerator<List<double>, MockAnnotation> {
