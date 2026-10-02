@@ -11,7 +11,7 @@ The library [`merging_builder`][merging_builder] includes the following
 * [`MergingBuilder`][MergingBuilder] reads *several input files*
 and writes merged output to *one output file* to a custom location.
 
-* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and
+* [`StandaloneBuilder`][StandaloneBuilder] reads input files and
 writes standalone files to a custom location. In this context, *standalone*
 means the output files may be written to a *custom folder* and
 not only the *extension* but the *name* of the output file can

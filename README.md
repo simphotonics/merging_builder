@@ -7,19 +7,20 @@
 
 Source code generation has become an important software development tool
 when building and maintaining a large number of data models,
+data access object, widgets, etc.
 
-
-data access object, widgets, etc. The premise of *source code generation* is that we can specify
+The premise of *source code generation* is that we can specify
 (hopefully few) details and flesh out the rest of the classes,
 and methods during the build process.
 
-The library [`merging_builder`][merging_builder] includes the following (synthetic input) builder classes:
+The library [`merging_builder`][merging_builder]
+includes the following (synthetic input) builder classes:
 
 * [`MergingBuilder`][class-merging-builder] reads *several input files* and writes
 merged output to *one output file* to a custom location.
 
-* [`StandaloneBuilder`][StandaloneBuilder] reads one or several input files and
-writes standalone files to a custom location. In this context, *standalone*
+* [`StandaloneBuilder`][StandaloneBuilder] reads input files and
+writes output files to a custom location. In this context, *standalone*
 means the output files may be written to a *custom folder* and
 not only the *extension* but the *name* of the output file can
 be configured (as opposed to using part files).
@@ -31,14 +32,18 @@ Following the example of [`source_gen`][source_gen], it is common practice to
 separate *builders* and *generators* from the code using those builders.
 
 In the [example] project provided, the package defining a new
-builder is called `researcher_builder` and the package using this builder is called `researcher`.
+builder is called `researcher_builder` and the package using this
+builder is called `researcher`.
 To set up a build system the following steps are required:
 
 ### 1. Builder Package Setup
 
 1. Get dependencies: Include [`merging_builder`][merging_builder], [`build`][build] as *dependencies* in the file `pubspec.yaml`. In the [example] mentioned here, the generator also requires the packages [`analyzer`][analyzer] and [`source_gen`][source_gen].
 
-2. Create a generator: Create a custom generator that extends [`MergingGenerator`][MergingGenerator]. In [example] `generateItemForAnnotatedElement` reads a list of strings while `generateMergedContent` merges the data and generates output that is written to [researchers.dart].
+2. Create a generator: Create a custom generator that extends [`MergingGenerator`][MergingGenerator].
+In the [example], `generateItemForAnnotatedElement` reads a list of strings
+while `generateMergedContent` merges the data and
+generates output that is written to [researchers.dart].
 
 3. Create a builder: Create an instance of [`MergingBuilder`][MergingBuilder]. Following the example of [`source_gen`][source_gen], builders are typically placed in a file called: `builder.dart` located in the `lib` folder of the builder package.
    * Input sources may be specified using wildcard characters supported by [`Glob`][Glob].
@@ -108,9 +113,14 @@ A sample `build.yaml` file is shown below.
 
 [`MergingBuilder`][MergingBuilder] reads *several input files* and writes merged output to *one output file*.
 The builder provides the option to sort the input files in reverse topological order.
-If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`. This option may be useful when
-generating code that needs to list variables or call functions in order of dependence.
-To enable topological sorting set the constructor parameter `sortAsset: true`. Note: If sorting of input assets is enabled, input files must not include each other directly or indirectly.
+If the input file `a.dart` includes file `b.dart` then `a.dart` will be listed *after* `b.dart`.
+
+This option may be useful when
+generating code that needs to list variables or call functions in order
+of dependence.
+To enable topological sorting set the constructor parameter
+`sortAsset: true`. Note: If sorting of input assets is enabled,
+input files must not include each other directly or indirectly.
 
 A conventional builder typically calls the generator method `generate` from within
 its `build` method to retrieve the generated source-code. [`MergingBuilder`][MergingBuilder]
@@ -141,7 +151,7 @@ Output files are specified using the custom symbol
 such that `(*)` is replaced with the input file name (excluding the file extension).
 For more details, see the file [`example\researcher_builder\builder.dart`][builder.dart].
 
-Limitations: For builders extending [`StandaloneBuilder`][StandaloneBuilder]
+Note: For builders extending [`StandaloneBuilder`][StandaloneBuilder]
 it is recommended to initiate the build command
 from the root directory of the package the build is applied to.
 
