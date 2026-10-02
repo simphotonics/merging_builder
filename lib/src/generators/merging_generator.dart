@@ -1,19 +1,19 @@
 import 'dart:async';
+
 import 'package:analyzer/dart/element/element.dart' show Element;
 import 'package:build/build.dart' show BuildStep;
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
 /// Generic class that extends [GeneratorForAnnotation].
+///
 /// * The generator method [generateStream] is used to
 ///   pass a stream of objects of type  [T] to a
 ///   builder of type [MergingBuilder].
 ///
-/// * [T] is a generic type and [A] is an annotation.
-abstract class MergingGenerator<T, A> extends GeneratorForAnnotation<A> {
-  /// Const constructor used to instantiate an object of type [MergingGenerator].
-  const MergingGenerator();
-
+/// * [T] is a generic type and [A] is the type of an annotation.
+abstract class const MergingGenerator<T, A>()
+    extends GeneratorForAnnotation<A> {
   /// Generates a stream of objects of type [T]. Each value of [T] is
   /// calculated by calling [generateStreamItemForAnnotatedElement].
   Stream<T> generateStream(LibraryReader library, BuildStep buildStep) async* {

@@ -8,46 +8,24 @@ import 'formatter.dart';
 import '../enum/build_location.dart';
 
 /// Base class of a builder that uses synthetic input.
-abstract class SyntheticBuilder implements Builder {
-  /// Super constructor of an object that extends [SyntheticBuilder].
-  /// * [inputFiles]: Path to the input files relative to the
-  /// package root directory. Glob-style syntax is
-  /// allowed for example: `lib/*.dart`.
-  /// * [header]: [String] that will be inserted at the top of the
-  /// generated file below the 'DO NOT EDIT' warning message.
-  /// * [footer]: String that will be inserted at the very bottom of the
-  /// generated file.
-  /// * [formatter]: A function with signature `String Function(String input)`
-  /// that is used to format the generated source code.
-  /// The default formatter is: `DartFormatter().format`.
-  /// To disable formatting one may pass a closure returning the
-  /// input: `(input) => input` as argument for `formatter`.
-  SyntheticBuilder({
-    required this.buildLocation,
-    required this.inputFiles,
-    this.header = '',
-    this.footer = '',
-    Formatter? formatter,
-  }) : formatter =
-           formatter ??
-           DartFormatter(
-             languageVersion: DartFormatter.latestLanguageVersion,
-           ).format;
+abstract class SyntheticBuilder({
+  /// The synthetic input used by this builder.
+  required final BuildLocation buildLocation,
 
-  /// Input files. Specify the complete path relative to the
-  /// root directory.
+  /// Path to the input files relative to the
+  /// package root directory.
   ///
-  /// For example: `lib/*.dart` includes all Dart files in
-  /// the projects `lib` directory.
-  final String inputFiles;
+  /// Glob-style syntax is
+  /// allowed for example: `lib/*.dart`.
+  required final String inputFiles,
 
   /// String that will be inserted at the top of the
   /// generated file below the 'DO NOT EDIT' warning message.
-  final String header;
+  final String header = '',
 
   /// String that will be inserted at the very bottom of the
   /// generated file.
-  final String footer;
+  final String footer = '',
 
   /// A function with signature `String Function(String input)`.
   /// Defaults to `DartFormatter().format`.
@@ -55,10 +33,17 @@ abstract class SyntheticBuilder implements Builder {
   /// Is used to format the merged output.
   /// To disable formatting one may pass a closure returning the
   /// input: `(input) => input` as argument for `formatter`.
-  final Formatter formatter;
-
-  /// The synthetic input used by this builder.
-  final BuildLocation buildLocation;
+  Formatter? formatter,
+}) implements Builder {
+  /// A function used to format the merged source-code output.
+  ///
+  /// * Defaults to:
+  /// `DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format`.
+  /// * To disable formatting use: `(input) => input`.
+  final Formatter formatter =
+      formatter ??
+      DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+          .format;
 
   /// Returns the generated source code
   /// after adding the header and footer.

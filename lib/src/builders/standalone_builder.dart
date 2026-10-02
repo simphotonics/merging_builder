@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:build/build.dart';
 import 'package:exception_templates/exception_templates.dart';
-import 'package:file/local.dart';
+import 'package:file/file.dart' show Directory, File;
 import 'package:glob/glob.dart';
-import 'package:lazy_memo/lazy_memo.dart';
+import 'package:glob/list_local_fs.dart' show ListLocalFileSystem;
 import 'package:merging_builder/src/enum/build_location.dart';
 import 'package:path/path.dart' as path;
 import 'package:source_gen/source_gen.dart' show Generator, LibraryReader;
@@ -13,68 +13,47 @@ import 'synthetic_builder.dart';
 
 /// Builder that uses synthetic input and
 /// creates one output file for each input file.
-class StandaloneBuilder extends SyntheticBuilder {
-  /// Constructs a [StandaloneBuilder] object.
-  ///
-  /// - [inputFiles] defaults to: `'lib/*.dart'`. Glob-style syntax supported.
-  ///
-  /// - [outputFiles]: Path to the output files.
-  /// The symbol `(*)` will be replaced with the corresponding input file name
-  /// (omitting the extension). Defaults to: `'lib/standalone_(*).dart'`.
-  ///
-  /// - [generator]: An instance of [Generator].
-  ///
-  /// - [header]: A String that will be inserted at the top of the
-  /// generated file below the 'DO NOT EDIT' warning message.
-  ///
-  /// - [footer]: A String that will be inserted at the very bottom of the
-  /// generated file.
-  ///
-  /// - [formatter]: A function with signature `String Function(String input)`.
-  /// Defaults to `DartFormatter().format`.
-  /// To disable formatting one may pass a closure returning the
-  /// input: `(input) => input` as argument for `formatter`.
-  StandaloneBuilder({
-    required this.generator,
-    super.inputFiles = 'lib/*.dart',
-    this.outputFiles = 'lib/standalone_(*).dart',
-    super.buildLocation = BuildLocation.lib,
-    super.header,
-    super.footer,
-    super.formatter,
-    String root = '',
-  }) : root = root.trim() {
-    _resolvedOutputFiles = Lazy(_outputPaths);
-  }
+class StandaloneBuilder({
+  /// Instance of [Generator],
+  required final Generator generator,
+
+  super.inputFiles = 'lib/*.dart',
 
   /// Path to output files.
   /// The symbol `(*)` will be replaced with the corresponding input file name
   /// (omitting the extension).
   ///
   /// Example: `lib/standalone_(*).dart`
-  final String outputFiles;
+  final String outputFiles = 'lib/standalone_(*).dart',
 
-  /// Instance of [Generator].
-  final Generator generator;
-
-  /// Lazily computes the output file names by replacing the
-  /// placeholder `(*)` in [outputFiles] with the input file basename.
-  late final Lazy<List<String>> _resolvedOutputFiles;
+  super.buildLocation = BuildLocation.lib,
+  super.header,
+  super.footer,
+  super.formatter,
 
   /// The root directory of the package the build is applied to.
   /// This variable does not need to be set if the build command is initiated
   /// from the root directory of the package.
-  final String root;
+  String root = '',
+}) extends SyntheticBuilder {
+  /// Lazily computes the output file names by replacing the
+  /// placeholder `(*)` in [outputFiles] with the input file basename.
+  late final List<String> _resolvedOutputFiles = _outputPaths();
+
+  /// The root directory of the package the build is applied to.
+  /// This variable does not need to be set if the build command is initiated
+  /// from the root directory of the package.
+  final String root = root.trim();
 
   /// Returns a map of type `Map<String, List<String>>`
   /// with content {synthetic input: list of output files}.
   @override
   Map<String, List<String>> get buildExtensions => {
-    buildLocation.value: _resolvedOutputFiles(),
+    buildLocation.value: _resolvedOutputFiles,
   };
 
   @override
-  FutureOr<void> build(BuildStep buildStep) async {
+  Future<void> build(BuildStep buildStep) async {
     final libAssetIds = await libraryAssetIds(buildStep);
     // Accessing libraries.
     for (final libAssetId in libAssetIds) {
@@ -104,21 +83,33 @@ class StandaloneBuilder extends SyntheticBuilder {
   /// Returns a list of output file paths.
   List<String> _outputPaths() {
     final result = <String>[];
+    final files = <File>[];
     buildLocation.validatePath(inputFiles);
     buildLocation.validatePath(outputFiles);
-    final resolvedInputFiles = Glob(inputFiles);
-    final fileSystem = LocalFileSystem();
-    for (final inputEntity in resolvedInputFiles.listFileSystemSync(
-      fileSystem,
-      root: root,
-    )) {
-      final basename = path.basenameWithoutExtension(inputEntity.path);
+    final glob = Glob(inputFiles);
+
+    // Collect all files
+    for (final entity in glob.listSync(root: root)) {
+      if (entity is Directory) {
+        for (final e in entity.listSync()) {
+          if (e is File) {
+            files.add(e);
+          }
+        }
+      } else if (entity is File) {
+        files.add(entity);
+      }
+    }
+
+    // Validate files
+    for (final inputFile in files) {
+      final basename = path.basenameWithoutExtension(inputFile.path);
       final outputFileName = outputFiles.replaceAll(
         RegExp(r'\(\*\)'),
         basename,
       );
       // Check if output clashes with input files.
-      if (path.equals(outputFileName, inputEntity.path)) {
+      if (path.equals(outputFileName, inputFile.path)) {
         throw ErrorOf<StandaloneBuilder>(
           message: 'Output file clashes with input file!',
           expectedState:

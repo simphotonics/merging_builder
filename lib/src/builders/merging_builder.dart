@@ -15,25 +15,25 @@ import 'synthetic_builder.dart';
 /// - Input files must be specified using [Glob] syntax.
 /// - Requires a generator extending [MergingGenerator].
 class MergingBuilder<T, A> extends SyntheticBuilder {
-  /// Constructs a [MergingBuilder] object, where [T] is the output type and
+  /// Constructs a [MergingBuilder], where [T] is the output type and
   /// [A] is the annotation type used by the [MergingGenerator].
   /// * [inputFiles]: Path to the input files relative to the
   /// package root directory. Glob-style syntax is
   /// allowed, defaults to: `'lib/*.dart'`.
   /// * [outputFile]: defaults to: `'lib/merged_output.dart'`.
-  /// * [buildLocation]:
+  /// * [buildLocation]: defaults to: [BuildLocation.lib].
   /// * [generator]: Must extend `MergingGenerator<T, A>`.
   /// * [header]: `String` that will be inserted at the top of the
   /// generated file below the 'DO NOT EDIT' warning message.
   /// * [footer]: String that will be inserted at the very bottom of the
   /// generated file.
-  /// * [formatter]: A function with signature `String Function(String input)`
+  /// * [formatter]: A function with signature String Function(String input)`
   /// that is used to format the generated source code.
   /// The default formatter is: `DartFormatter().format`.
   /// Note: The standard Dart formatter will throw an error if the generated
   /// source code contains invalid syntax. To temporarily suppress formatting
   /// use: `(String input) => input`.
-  MergingBuilder({
+  new({
     required this.generator,
     super.inputFiles = 'lib/*.dart',
     this.outputFile = 'lib/merged_output.dart',
@@ -68,7 +68,7 @@ class MergingBuilder<T, A> extends SyntheticBuilder {
   /// Writes the merged content to the stand-alone file
   /// specified by [outputFile].
   @override
-  FutureOr<void> build(BuildStep buildStep) async {
+  Future<void> build(BuildStep buildStep) async {
     // Validate synthetic input/output.
     buildLocation.validatePath(inputFiles);
     buildLocation.validatePath(outputFile);
