@@ -1,4 +1,7 @@
 
+# 1.1.1
+- Removed dependency on `lazy_memo`.
+
 # 1.1.0
 - Requires Dart SDK ^3.13.0
 - Updated docs and dependencies.
