@@ -1,4 +1,8 @@
 
+# 1.1.0
+- Requires Dart SDK ^3.13.0
+- Updated docs and dependencies.
+
 # 1.0.0
 - Requires analyser ^14.1.0.
 

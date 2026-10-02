@@ -1,9 +1,18 @@
 include: package:lints/recommended.yaml
+
 analyzer:
-  #exclude: [build/**]
-  #strong-mode:
-    #implicit-casts: false
+  errors:
+    todo: warning
 
 linter:
   rules:
+    - avoid_void_async
+    - async_return_with_no_await
     - camel_case_types
+    - empty_container_bodies
+    - initialize_in_field_declaration
+    - unnecessary_async
+    - unnecessary_const_in_enum_constructor
+    - unnecessary_primary_constructor_body
+    - unnecessary_type_name_in_constructor
+    - use_declaring_parameters
