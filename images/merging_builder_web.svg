@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="285.49mm" height="129.86mm" version="1.1" viewBox="0 0 285.49 129.86" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <defs>
+  <marker id="marker14774" overflow="visible" markerHeight="7" markerWidth="4.2071066" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 4.2071068 7">
+   <path transform="rotate(180 .125 0)" d="m3-3-3 3 3 3" fill="none" stroke="context-stroke" stroke-linecap="round"/>
+  </marker>
+  <marker id="Arrow3" overflow="visible" markerHeight="7" markerWidth="4.2071066" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 4.2071068 7">
+   <path transform="rotate(180 .125 0)" d="m3-3-3 3 3 3" fill="none" stroke="context-stroke" stroke-linecap="round"/>
+  </marker>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <path d="m133.1 30.135h28.504v5.4311h-28.504z" fill-opacity="0" stroke-dashoffset="1.4285" stroke-linejoin="round" stroke-width=".53076"/>
+ <path d="m32.916 14.548h144.08v26.13h-144.08zm0 0.155v-8.6305h144.08v8.1013" fill-opacity="0" stroke="#797979" stroke-dashoffset="1.4285" stroke-linejoin="round" stroke-width=".4"/>
+ <g stroke="#36c871" stroke-opacity=".79608" stroke-width=".5">
+  <path d="m230.33 109.75v11.535h-207.4v-96.798h9.5096" fill="none" marker-end="url(#marker14774)" stroke-dashoffset="1.4285" style="paint-order:markers fill stroke"/>
+  <path d="m255.92 100.99v24.444h-237.63v-92.512h13.821" fill="none" marker-end="url(#marker14774)" stroke-dasharray="1.00000674,1.00000674" stroke-dashoffset=".79502" style="paint-order:markers fill stroke"/>
+  <path d="m153.96 89.811h63.548v-27.428h-152.83v35.057h10.407" fill-opacity="0" marker-end="url(#Arrow3)" stroke-dashoffset="1.4285" style="paint-order:markers fill stroke"/>
+ </g>
+ <path d="m154.24 36.692v9.5493h-107.26l0.53802 58.957h26.978" fill-opacity="0" marker-end="url(#Arrow3)" stroke="#37c871" stroke-dasharray="1.00000674,1.00000674" stroke-opacity=".79608" stroke-width=".5" style="paint-order:markers fill stroke"/>
+ <g fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">
+  <text x="71.310402" y="12.192856" xml:space="preserve"><tspan x="71.310402" y="12.192856" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">MergingBuilder &lt;T, A&gt;</tspan></text>
+  <text x="36.159615" y="26.290091" xml:space="preserve"><tspan x="36.159615" y="26.290091" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">build(BuildStep buildStep): FutureOr&lt;void&gt;</tspan></text>
+  <text x="36.683491" y="34.495716" xml:space="preserve"><tspan x="36.683491" y="34.495716" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">_combineStreams(BuildStep buildStep): </tspan></text>
+ </g>
+ <g fill="#37c871" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">
+  <text x="143.84071" y="34.80703" xml:space="preserve"><tspan x="143.84071" y="34.80703" fill="#37c871" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">Stream&lt;T&gt;</tspan></text>
+  <text x="242.51187" y="98.963654" xml:space="preserve"><tspan x="242.51187" y="98.963654" fill="#37c871" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">Stream&lt;T&gt;</tspan></text>
+  <text x="201.52652" y="107.53843" xml:space="preserve"><tspan x="201.52652" y="107.53843" stroke-width="1.008">FutureOr&lt;String&gt;</tspan><tspan x="201.52652" y="114.59398"/></text>
+  <text x="145.47623" y="91.317177" xml:space="preserve"><tspan x="145.47623" y="91.317177" stroke-width="1.008">T</tspan><tspan x="145.47623" y="98.372726"/></text>
+ </g>
+ <g fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">
+  <text x="86.246605" y="69.609924" xml:space="preserve"><tspan x="86.246605" y="69.609924">generateStreamForAnnotatedElement(</tspan><tspan x="86.246605" y="76.791092">  Element element, </tspan><tspan x="86.246605" y="83.972252">  ConstantReader annotation,</tspan><tspan x="86.246605" y="91.153419"> BuildStep buildStep):  </tspan></text>
+  <text x="78.895401" y="98.706245" xml:space="preserve"><tspan x="78.895401" y="98.706245" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">generateStream(LibraryReader reader, BuildStep buildStep):</tspan></text>
+  <text x="78.895401" y="107.32411" xml:space="preserve"><tspan x="78.895401" y="107.32411" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">generateMergedContent(Stream&lt;T&gt; stream): </tspan></text>
+ </g>
+ <path d="m54.276 58.856h222.86v55.421h-222.86zm0 0.81396v-8.9786h222.86v8.0063" fill-opacity="0" stroke="#797979" stroke-dashoffset="1.4285" stroke-linejoin="round" stroke-width=".4"/>
+ <text x="123.94431" y="56.388992" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008" xml:space="preserve"><tspan x="123.94431" y="56.388992" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">MergingGenerator&lt;T, A&gt;</tspan></text>
+</svg>
