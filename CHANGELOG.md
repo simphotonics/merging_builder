@@ -1,4 +1,7 @@
 
+# 1.1.2
+- Updated dependencies. 
+
 # 1.1.1
 - Removed dependency on `lazy_memo`.
 

@@ -3,7 +3,7 @@ name: merging_builder
 description: Builder that reads multiple input files and writes merged output
   to one single file.
 
-version: 1.1.1
+version: 1.1.2
 
 homepage: https://github.com/simphotonics/merging_builder
 
@@ -16,16 +16,16 @@ environment:
   sdk: '^3.13.0'
 
 dependencies:
-  analyzer: ^14.4.0
-  build: ^4.0.11
-  build_runner: ^2.16.1
-  dart_style: ^3.1.12
-  directed_graph: ^1.0.0
+  analyzer: ^14.7.0
+  build: ^5.0.0
+  build_runner: ^2.17.1
+  dart_style: ^3.1.14
+  directed_graph: ^1.2.0
   exception_templates: ^1.1.0
   file: ^7.0.1
   glob: ^2.2.0
   path: ^1.9.1
-  source_gen: ^4.3.0
+  source_gen: ^4.3.1
 
 #dependency_overrides:
 # source_gen:
@@ -34,6 +34,6 @@ dependencies:
 #     ref: master
 #     path: source_gen
 dev_dependencies:
-  build_test: ^3.5.20
+  build_test: ^3.5.23
   lints: ^6.1.0
-  test: ^1.32.0
+  test: ^1.33.0
