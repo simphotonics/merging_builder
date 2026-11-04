@@ -24,11 +24,11 @@
   <path d="m227.88 100.99v24.444h-209.58v-92.512h13.821" fill="none" marker-end="url(#marker14774)" stroke-dasharray="1.00001, 1.00001" stroke-dashoffset=".79502" style="paint-order:markers fill stroke"/>
   <path d="m144.97 89.811h63.548v-27.428h-152.83v35.057h8.2899" fill-opacity="0" marker-end="url(#Arrow3)" stroke-dashoffset="1.4285" style="paint-order:markers fill stroke"/>
  </g>
- <path d="m154.24 36.692v9.5493h-116.78l0.53802 58.957h25.391" fill-opacity="0" marker-end="url(#Arrow3)" stroke="#37c871" stroke-dasharray="1.00001, 1.00001" stroke-opacity=".79608" stroke-width=".5" style="paint-order:markers fill stroke"/>
+ <path d="m143.66 36.692v9.5493h-106.2l0.53802 58.957h25.391" fill-opacity="0" marker-end="url(#Arrow3)" stroke="#37c871" stroke-dasharray="1.00001, 1.00001" stroke-opacity=".79608" stroke-width=".5" style="paint-order:markers fill stroke"/>
  <g fill="#bababa" font-family="OpenSymbol" stroke-width="1.008">
   <text x="71.310402" y="12.192856" font-size="5.6444px" xml:space="preserve"><tspan x="71.310402" y="12.192856" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">MergingBuilder &lt;T, A&gt;</tspan></text>
   <text x="36.159615" y="26.290091" font-size="4.9389px" xml:space="preserve"><tspan x="36.159615" y="26.290091" fill="#bababa" font-family="OpenSymbol" font-size="4.9389px" stroke-width="1.008">build(BuildStep buildStep): FutureOr&lt;void&gt;</tspan></text>
-  <text x="36.683491" y="34.495716" font-size="5.6444px" xml:space="preserve"><tspan x="36.683491" y="34.495716" fill="#bababa" font-family="OpenSymbol" font-size="5.6444px" stroke-width="1.008">_<tspan font-size="4.9389px">combineStreams</tspan>(BuildStep buildStep): Stream&lt;T&gt; </tspan></text>
+  <text x="36.683491" y="34.495716" font-size="4.9389px" xml:space="preserve"><tspan x="36.683491" y="34.495716" fill="#bababa" font-family="OpenSymbol" font-size="4.9389px" stroke-width="1.008">_combineStreams(BuildStep buildStep): Stream&lt;T&gt; </tspan></text>
   <g font-size="4.9389px">
    <text x="66.138252" y="69.609924" xml:space="preserve"><tspan x="66.138252" y="69.609924">generateStreamForAnnotatedElement(</tspan><tspan x="66.138252" y="76.791084">  Element element, </tspan><tspan x="66.138252" y="83.972252">  ConstantReader annotation,</tspan><tspan x="66.138252" y="91.153412"> BuildStep buildStep): T  </tspan></text>
    <text x="65.827805" y="99.235413" xml:space="preserve"><tspan x="65.827805" y="99.235413" fill="#bababa" font-family="OpenSymbol" font-size="4.9389px" stroke-width="1.008">generateStream(LibraryReader reader, BuildStep buildStep): Stream&lt;T&gt;</tspan></text>
