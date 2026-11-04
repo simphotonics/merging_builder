@@ -136,7 +136,7 @@ It is the task of this method to generate the *merged* source-code output.
 The figure below shows the flow of data between the builder and the generator.
 The data type is indicated by the starting point of the connectors. Dotted connectors represent a stream of data.
 
-![Directed Graph Image](https://raw.githubusercontent.com/simphotonics/merging_builder/master/images/merging_builder.svg?sanitize=true)
+![Directed Graph Image](https://github.com/simphotonics/merging_builder/raw/main/images/merging_builder_web.svg?sanitize=true)
 
 ## Standalone Builder
 
